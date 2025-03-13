@@ -4,14 +4,14 @@ import axios from "axios";
 import { title } from "@/components/primitives";
 import CommandList from "@/components/CommandList";
 import { Button } from "@heroui/react";
-import { CommandResponseDTO } from "@/types/CommandDTO";
+import { CommandDTO } from "@/types/CommandDTO";
 import { FaPlus, FaKeyboard } from "react-icons/fa";
 
 export default function CommandsPage() {
-  const [selectedCommand, setSelectedCommand] = useState<CommandResponseDTO | null>(null);
+  const [selectedCommand, setSelectedCommand] = useState<CommandDTO | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showKeyboardForm, setShowKeyboardForm] = useState(false);
-  const [commands, setCommands] = useState<CommandResponseDTO[]>([]);
+  const [commands, setCommands] = useState<CommandDTO[]>([]);
 
   const fetchCommands = async () => {
     try {
@@ -26,7 +26,7 @@ export default function CommandsPage() {
     fetchCommands();
   }, []);
 
-  const handleSelectCommand = (command: CommandResponseDTO) => {
+  const handleSelectCommand = (command: CommandDTO) => {
     setSelectedCommand(command);
   };
 
@@ -53,7 +53,7 @@ export default function CommandsPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full min-h-screen flex flex-col">
       {/* Header and Add Button */}
       <div className="flex justify-between items-center mb-8 px-4">
         <h1 className={title()}>Commands</h1>
@@ -68,7 +68,7 @@ export default function CommandsPage() {
       </div>
 
       {/* Command List and Tabs */}
-      <div className="flex-1 grid grid-cols-3 gap-8 px-4">
+      <div className="flex-1 grid grid-cols-3  px-4 ">
         <div className="col-span-2">
           <CommandList
             commands={commands}

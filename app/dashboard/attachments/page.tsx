@@ -71,7 +71,8 @@ export default function AttachmentsPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+
+      <div className="w-full flex flex-col min-h-screen">
       {/* Header and Add Button */}
       <div className="flex justify-between items-center mb-8 px-4">
         <h1 className={title()}>Attachments</h1>
@@ -84,17 +85,16 @@ export default function AttachmentsPage() {
           <FaPlus />
         </Button>
       </div>
-
       {/* Attachment List and Tabs */}
-      <div className="flex-1 grid grid-cols-3 gap-8 px-4">
-        <div className="col-span-2">
+      <div className="flex-1 px-4">
+  
           <AttachmentList
             attachments={attachments}
             commands={commands || []}
             onSelectAttachment={handleSelectAttachment}
             onAttachmentUpdated={handleAttachmentUpdated}
           />
-        </div>
+      
         <div>
           {/* Insert additional content/components here if needed */}
         </div>

@@ -90,7 +90,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen"> {/* min-h-screen для растяжения */}
+    <div className="w-full h-full flex flex-col p-6"> {/* min-h-screen для растяжения */}
       <div className="overflow-y-auto">
         <h1 className="text-2xl font-bold mb-4">Dashboard Panel</h1>
         <p className="text-gray-600">

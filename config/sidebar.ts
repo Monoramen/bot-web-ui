@@ -21,22 +21,22 @@ export const sidebarConfig = {
           subMenu: [
             {
               title: "Inline Keyboard",
-              link: "/dashboard/inlinekeyboards",
+              link: "/dashboard/attachments/inlinekeyboards",
               icon: "FaKeyboard",
             },
             {
               title: "Keyboard",
-              link: "/dashboard/keyboards",
+              link: "/dashboard/attachments/keyboards",
               icon: "FaKeyboard",
             },
             {
               title: "Audio",
-              link: "/dashboard/audios",
+              link: "/dashboard/attachments/audios",
               icon: "FaVolumeUp",
             },
             {
               title: "Image",
-              link: "/dashboard/buttons",
+              link: "/dashboard/attachments/images",
               icon: "FaImage",
             },
             {

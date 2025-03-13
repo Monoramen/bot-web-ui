@@ -6,13 +6,18 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full min-h-screen">
+    <div className="w-full min-h-screen bg-background dark:bg-background-gray-900 flex">
+      {/* Сайдбар */}
       <Sidebar />
-      <main className="w-full ml-64 p-0 bg-gray-900 overflow-y-auto">
-        <div className="min-h-screen p-4">
-          {children}
+
+      {/* Основной контент */}
+      <div className="flex-grow flex flex-col">
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            {children}
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

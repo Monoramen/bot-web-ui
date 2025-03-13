@@ -27,6 +27,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -44,7 +45,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="flex-grow">
+            <main className="flex-grow "> {/* Добавлен pt-4 для отступа сверху */}
               {children}
             </main>
             <Foobar />

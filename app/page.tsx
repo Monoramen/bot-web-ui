@@ -4,7 +4,7 @@ import { Code } from "@heroui/code";
 import { button as buttonStyles } from "@heroui/theme";
 
 import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
+import { title, subtitle } from "@/components/Primitives";
 import { GithubIcon } from "@/components/icons";
 
 export default function Home() {
@@ -38,7 +38,7 @@ export default function Home() {
           className={buttonStyles({
             color: "secondary",
             radius: "full",
-            variant: "filled",
+            variant: "solid",
           })}
           href="/login"
         >

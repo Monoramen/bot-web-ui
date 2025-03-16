@@ -1,8 +1,15 @@
 "use client";
 import { Card, CardHeader, CardBody, Badge } from "@heroui/react";
 import { AttachmentTile } from "@/components/attachment/AttachmentTile";
+import { CommandDTO } from "@/types/CommandDTO"; // ✅ Импорт типа
+import { AttachmentDTO } from "@/types/Attachments"; // ✅ Импорт типа
 
-export function CommandCard({ command, attachments }) {
+interface CommandCardProps {
+  command: CommandDTO; // ✅ Тип команды
+  attachments: AttachmentDTO[]; // ✅ Тип прикреплений
+}
+
+export function CommandCard({ command, attachments }: CommandCardProps) {
   // Фильтруем прикрепления, относящиеся к этой команде
   const commandAttachments = attachments.filter((attachment) =>
     command.attachment_ids.includes(attachment.id)

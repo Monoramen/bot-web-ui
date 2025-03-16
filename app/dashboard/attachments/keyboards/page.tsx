@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { title } from "@/components/primitives";
+import { title } from "@/components/Primitives";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@heroui/react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import { KeyboardDTO, ButtonDTO } from "@/types/AttachmentDTO";
+import { KeyboardDTO, ButtonDTO } from "@/types/Attachments";
 
 export default function KeyboardsPage() {
   const [keyboards, setKeyboards] = useState<KeyboardDTO[]>([]);

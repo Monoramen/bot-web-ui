@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { title } from "@/components/primitives";
+import { title } from "@/components/Primitives";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@heroui/react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import { InlineKeyboardDTO, InlineButtonDTO } from "@/types/AttachmentDTO";
+import { InlineKeyboardDTO, InlineButtonDTO } from "@/types/Attachments";
 
 export default function InlineKeyboardsPage() {
   const [inlineKeyboards, setInlineKeyboards] = useState<InlineKeyboardDTO[]>([]);
@@ -133,25 +133,26 @@ export default function InlineKeyboardsPage() {
 
       {/* Selected Keyboard Details */}
       {selectedKeyboard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-xl font-semibold">{selectedKeyboard.inline_keyboard_name}</h2>
-            <div className="mt-2">
-              {selectedKeyboard.buttons.map((button) => (
-                <div key={button.id} className="bg-gray-500 p-2 rounded mt-1">
-                  <p>Text: {button.text}</p>
-                  <p>Position: {button.position}, Row: {button.row}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-end mt-4">
-              <Button onClick={() => setSelectedKeyboard(null)} color="danger">
-                Close
-              </Button>
-            </div>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-lg">
+      <h2 className="text-xl font-semibold">{selectedKeyboard.inline_keyboard_name}</h2>
+      <div className="mt-2">
+        {selectedKeyboard.buttons.map((button) => (
+          <div key={button.id} className="bg-gray-500 p-2 rounded mt-1">
+            <p>Text: {button.text}</p>
+            <p>Position: {button.position}, Row: {button.row}</p>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+      <div className="flex justify-end mt-4">
+        <Button onClick={() => setSelectedKeyboard(null)} color="danger">
+          Close
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

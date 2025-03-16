@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { title } from "@/components/primitives";
+import { title } from "@/components/Primitives";
 import { Button } from "@heroui/react";
 import { FaPlus, FaMusic } from "react-icons/fa";
 

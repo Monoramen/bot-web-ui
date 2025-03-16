@@ -4,24 +4,31 @@ import { sidebarConfig } from "@/config/sidebar";
 import * as icons from "react-icons/fa";
 import Link from "next/link";
 
+interface SidebarItem {
+  title: string;
+  icon: string; // ✅ Изменено на string
+  link?: string;
+  subMenu?: SidebarItem[];
+}
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeIcon, setActiveIcon] = useState(null);
+  const [activeIcon, setActiveIcon] = useState<number | null>(null);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleIconClick = (event, index, hasSubMenu) => {
+  const handleIconClick = (event: React.MouseEvent, index: number, hasSubMenu: boolean) => {
     event.stopPropagation();
     if (hasSubMenu) {
-      setActiveIcon(activeIcon === index ? null : index); // Переключаем подменю
+      setActiveIcon(activeIcon === index ? null : index);
     }
   };
 
-  const renderMenu = (items, level = 0) => {
+  const renderMenu = (items: SidebarItem[], level = 0) => {
     return items.map((item, index) => {
-      const IconComponent = icons[item.icon];
+      const IconComponent = icons[item.icon as keyof typeof icons]; // ✅ Приведение типа
       const hasSubMenu = !!item.subMenu;
       return (
         <div key={index}>
@@ -49,10 +56,8 @@ const Sidebar = () => {
               {isOpen && <span className="text-gray-900 dark:text-white">{item.title}</span>}
             </div>
           </Link>
-          {hasSubMenu && (
+          {hasSubMenu && item.subMenu && (
             <div className="pl-0">
-              {" "}
-              {/* Убираем отступы для подменю */}
               {renderMenu(item.subMenu, level + 1)}
             </div>
           )}

@@ -1,6 +1,9 @@
 import { Card, CardBody, Badge } from "@heroui/react";
+import { AttachmentDTO } from "@/types/Attachments";
 
-export function AttachmentTile({ attachment }) {
+export function AttachmentTile({ attachment }: { attachment: AttachmentDTO }) {
+  
+
   const attachmentType = attachment.type.toLowerCase().replace("_", " ");
 
   return (
@@ -47,7 +50,7 @@ export function AttachmentTile({ attachment }) {
 
         {attachment.type === "BUTTON" && (
           <div className="mt-1">
-            <p className="text-xs">Button: {attachment.text}</p>
+            <p className="text-xs">Button: </p>
           </div>
         )}
       </CardBody>

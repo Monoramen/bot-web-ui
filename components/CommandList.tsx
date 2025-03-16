@@ -2,16 +2,16 @@
 import axios from "axios";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@heroui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { CommandResponseDTO } from "../types/CommandDTO";
+import { CommandDTO } from "../types/CommandDTO";
 import { useEffect, useState } from "react";
 
-export default function CommandList({
+export default function CommandList({ // ✅ Исправлено на export default
   commands,
   onSelectCommand,
   onCommandUpdated,
 }: {
-  commands: CommandResponseDTO[];
-  onSelectCommand: (command: CommandResponseDTO) => void;
+  commands: CommandDTO[];
+  onSelectCommand: (command: CommandDTO) => void;
   onCommandUpdated: () => void;
 }) {
   const [attachmentTypes, setAttachmentTypes] = useState<{ [key: number]: string }>({});
@@ -20,7 +20,7 @@ export default function CommandList({
   useEffect(() => {
     const fetchAttachmentTypes = async () => {
       const ids = commands.flatMap(cmd => cmd.attachment_ids);
-      const uniqueIds = [...new Set(ids)];
+      const uniqueIds = Array.from(new Set(ids));
       
       const types: { [key: number]: string } = {};
       await Promise.all(
@@ -64,7 +64,7 @@ export default function CommandList({
     ));
   };
 
-  return (
+  return ( // ✅ Явный возврат
     <div>
       <Table>
         <TableHeader>
@@ -86,17 +86,17 @@ export default function CommandList({
                 </div>
               </TableCell>
               <TableCell>
-  <div className="flex gap-2 items-center">
-    <FaEdit 
-      className="text-yellow-600 hover:text-yellow-700 cursor-pointer transition-colors"
-      onClick={() => onSelectCommand(command)}
-    />
-    <FaTrash 
-      className="text-red-600 hover:text-red-700 cursor-pointer transition-colors" 
-      onClick={() => handleDelete(command.id)}
-    />
-  </div>
-</TableCell>
+                <div className="flex gap-2 items-center">
+                  <FaEdit 
+                    className="text-yellow-600 hover:text-yellow-700 cursor-pointer transition-colors"
+                    onClick={() => onSelectCommand(command)}
+                  />
+                  <FaTrash 
+                    className="text-red-600 hover:text-red-700 cursor-pointer transition-colors" 
+                    onClick={() => handleDelete(command.id)}
+                  />
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

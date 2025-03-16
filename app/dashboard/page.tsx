@@ -1,7 +1,7 @@
 "use client";
 import { CommandCard } from "@/components/CommandCard"; // Предположим, что компоненты находятся в папке components
-import { AttachmentTile } from "@/components/attachment/AttachmentTile"; // Компонент для отображения прикреплений
-import { FunctionTile } from "@/components/FunctionTile"; // Компонент для отображения функций
+import { AttachmentTile } from "@/components/attachment/AttachmentTile";
+import { AttachmentDTO } from "@/types/Attachments";
 
 export default function DashboardPage() {
   const commands = [
@@ -134,9 +134,7 @@ export default function DashboardPage() {
         {/* Секция с функциями */}
         <h1 className="text-2xl font-bold mb-4">Functions</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          {functions.map((func) => (
-            <FunctionTile key={func.id} func={func} />
-          ))}
+
         </div>
       </div>
     </div>

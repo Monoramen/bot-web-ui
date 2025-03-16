@@ -1,5 +1,5 @@
 # Используем официальный образ Node.js
-FROM node:16-alpine
+FROM node:22-alpine
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Устанавливаем зависимости
-RUN npm install
-
+RUN npm install 
+## --legacy-peer-deps
 # Копируем исходный код
 COPY . .
 
 # Собираем приложение
-RUN npm run build
+RUN npx next build
 
 # Порт, который будет использовать приложение
 EXPOSE 3000

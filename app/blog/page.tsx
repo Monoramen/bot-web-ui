@@ -1,7 +1,6 @@
 "use client";
-import { title, subtitle } from "@/components/primitives";
+import { primitives } from "@/components/Primitives";
 import { Card, CardHeader, CardBody, CardFooter } from "@heroui/react";
-import { Link } from "@heroui/link";
 import { FaCalendarAlt } from "react-icons/fa";
 
 export default function BlogPage() {
@@ -28,8 +27,8 @@ export default function BlogPage() {
 
   return (
     <div className="w-full min-h-screen flex flex-col p-6 bg-background dark:bg-background-gray-900 ">
-      <h1 className={title()}>Blog</h1>
-      <p className={subtitle()}>Welcome to our blog. Here you can find the latest articles.</p>
+      <h1 className={primitives.title()}>Blog</h1>
+      <p className={primitives.subtitle()}>Welcome to our blog. Here you can find the latest articles.</p>
 
       <div className="mt-8 space-y-6">
         {posts.map((post) => (

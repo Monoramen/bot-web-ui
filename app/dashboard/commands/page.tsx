@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { title } from "@/components/primitives";
+import { title } from "@/components/Primitives";
 import CommandList from "@/components/CommandList";
 import { Button } from "@heroui/react";
 import { CommandDTO } from "@/types/CommandDTO";
@@ -53,7 +53,7 @@ export default function CommandsPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
+    <div className="w-full flex flex-col min-h-screen">
       {/* Header and Add Button */}
       <div className="flex justify-between items-center mb-8 px-4">
         <h1 className={title()}>Commands</h1>
@@ -68,14 +68,13 @@ export default function CommandsPage() {
       </div>
 
       {/* Command List and Tabs */}
-      <div className="flex-1 grid grid-cols-3  px-4 ">
-        <div className="col-span-2">
+      <div className="flex-1 px-4">
           <CommandList
             commands={commands}
             onSelectCommand={handleSelectCommand}
             onCommandUpdated={handleCommandUpdated}
           />
-        </div>
+      
         <div>
           {/* Insert additional content/components here if needed */}
         </div>

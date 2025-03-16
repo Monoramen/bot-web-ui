@@ -1,3 +1,4 @@
+// components/Primitives.tsx
 import { tv } from "tailwind-variants";
 
 export const title = tv({
@@ -51,3 +52,8 @@ export const subtitle = tv({
     fullWidth: true,
   },
 });
+
+export const primitives = {
+  title,
+  subtitle,
+};

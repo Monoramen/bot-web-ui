@@ -1,17 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { title } from "@/components/primitives";
+import { title } from "@/components/Primitives";
 import { AttachmentList } from "@/components/attachment/AttachmentList";
 import { Button } from "@heroui/react";
-import { AttachmentResponseDTO } from "@/types/AttachmentDTO";
+import { AttachmentDTO } from "@/types/Attachments";
+import { CommandDTO } from "@/types/CommandDTO";
 import { FaPlus, FaKeyboard } from "react-icons/fa";
+import { A } from "framer-motion/dist/types.d-B50aGbjN";
 
 export default function AttachmentsPage() {
-  const [selectedAttachment, setSelectedAttachment] = useState<AttachmentResponseDTO | null>(null);
+  const [selectedAttachment, setSelectedAttachment] = useState<AttachmentDTO | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showKeyboardForm, setShowKeyboardForm] = useState(false);
-  const [attachments, setAttachments] = useState<AttachmentResponseDTO[]>([]);
+  const [attachments, setAttachments] = useState<AttachmentDTO[]>([]);
   const [commands, setCommands] = useState<CommandDTO[]>([]);
 
   const fetchCommands = async () => {
@@ -44,7 +46,7 @@ export default function AttachmentsPage() {
     fetchAttachments();
   }, []);
 
-  const handleSelectAttachment = (attachment: AttachmentResponseDTO) => {
+  const handleSelectAttachment = (attachment: AttachmentDTO) => {
     setSelectedAttachment(attachment);
   };
 

@@ -1,56 +1,31 @@
-import "@/styles/globals.css";
-import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
-import clsx from "clsx";
+'use client';
 
-import { Providers } from "./providers";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import Navbar from '@/components/Navbar';
+import { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
+const inter = Inter({ subsets: ['latin'] });
 
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
-import Foobar from "@/components/Foobar";
 
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-};
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [isDark, setIsDark] = useState(true);
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+  // Добавляем или убираем класс dark на html
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isDark) html.classList.add('dark');
+    else html.classList.remove('dark');
+  }, [isDark]);
+
   return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="flex-grow "> {/* Добавлен pt-4 для отступа сверху */}
-              {children}
-            </main>
-            <Foobar />
-          </div>
-        </Providers>
+    <html lang="en">
+      <body className={`${inter.className} transition-colors duration-300`}>
+        <Navbar isDark={isDark} toggleTheme={() => setIsDark(!isDark)} />
+        <main className="p-6">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

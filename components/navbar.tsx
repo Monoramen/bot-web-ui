@@ -1,121 +1,107 @@
-"use client";
+'use client';
 
-import {
-  Navbar as HeroUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem,
-} from "@heroui/navbar";
-import React from "react";
-import { Kbd } from "@heroui/kbd";
-import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
-import { link as linkStyles } from "@heroui/theme";
-import NextLink from "next/link";
-import clsx from "clsx";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import { useState } from 'react';
+import Image from 'next/image'
+const navItems = [
+  { href: '/', label: 'Главная' },
+  { href: '/programs', label: 'Программы' },
+  { href: '/monitoring', label: 'Мониторинг' },
+  { href: '/settings', label: 'Настройки' },
+];
 
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+interface NavbarProps {
+  isDark: boolean;
+  toggleTheme: () => void;
+}
 
-export const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
+export default function Navbar({ isDark, toggleTheme }: NavbarProps) {
+  const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <HeroUINavbar onMenuOpenChange={setIsMenuOpen} shouldHideOnScroll maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-      <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
-        />
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-      
-          </NextLink>
-        </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
+    <nav className="relative bg-sidebar text-sidebar-foreground shadow transition-colors duration-300">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Логотип */}
+            <Link href="/" className="flex items-center space-x-2">
+              {/* Иконка вместо смайлика */}
+              <Image
+                src="/favicon.ico" // путь к иконке в public/
+                alt="ТРМ-251"
+                width={44}
+                height={44}
+              />
+              <span className="text-2xl font-bold text-primary">ТРМ-251</span>
+            </Link>
+
+
+          {/* Десктоп ссылки */}
+          <div className="hidden md:flex items-center space-x-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
                 href={item.href}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300
+                  ${pathname === item.href 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'hover:bg-primary hover:text-primary-foreground text-foreground'
+                  }`}
               >
                 {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
-      </NavbarContent>
+              </Link>
+            ))}
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
-        <NavbarItem className="hidden sm:flex gap-2">
+            {/* Переключение темы */}
+            <button
+              onClick={toggleTheme}
+              className="ml-4 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-300"
+            >
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          </div>
 
-          <ThemeSwitch />
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+          {/* Мобильное меню */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:text-primary hover:bg-primary/20 transition-colors duration-300"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </div>
+      </div>
 
-      </NavbarContent>
-
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
-        <ThemeSwitch />
-     
-      </NavbarContent>
-
-      <NavbarMenu>
-      {searchInput}
-        {siteConfig.navItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+      {/* Мобильное меню */}
+      {isMenuOpen && (
+        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          {navItems.map((item) => (
             <Link
-              className="w-full"
-              color={
-                index === 2 ? "primary" : index === siteConfig.navItems.length - 1 ? "danger" : "foreground"
-              }
-              href="#"
-              size="lg"
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300
+                ${pathname === item.href 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'text-foreground hover:bg-primary hover:text-primary-foreground'
+                }`}
             >
               {item.label}
             </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
-    </HeroUINavbar>
+          ))}
+
+          <button
+            onClick={toggleTheme}
+            className="mt-2 w-full flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors duration-300"
+          >
+            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            <span className="ml-2 text-sm">Сменить тему</span>
+          </button>
+        </div>
+      )}
+    </nav>
   );
-};
+}

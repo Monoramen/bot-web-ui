@@ -1,0 +1,163 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-light: var(--color-card-light);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Фон и интерфейс */
+  --background: #F5E3D0;        /* светлая глина */
+  --foreground: #1C1C1C;        /* чёрный текст */
+  --card: #e2dfd28f;              /* светлая карточка */
+  --card-foreground: #1C1C1C;
+  --color-card-light: #faf5f0; /* чуть светлее #F5E3D0 */
+  --popover: #F1D9B0;
+  --popover-foreground: #1C1C1C;
+
+  /* Акценты */
+  --primary: #D17A4C;           /* огненно-глиняный */
+  --primary-foreground: #FFFFFF;
+  --secondary: #B77C57;         /* обожжённая глина */
+  --secondary-foreground: #1C1C1C;
+  --accent: #F0A975;            /* мягкий свет */
+  --accent-foreground: #1C1C1C;
+  --destructive: #b61d12;       /* опасное действие */
+
+  /* Графики */
+--chart-1: #FF9B55; /* насыщенный оранжевый */
+--chart-2: #FF6F3C; /* яркий красно-оранжевый */
+--chart-3: #FF8050; /* коралловый */
+--chart-4: #D94F2A; /* тёплый красный */
+--chart-5: #B8321F; /* глубокий красный */
+
+  /* Сайдбар */
+  --sidebar: #F5E3D0;
+  --sidebar-foreground: #1C1C1C;
+  --sidebar-primary: #D17A4C;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #B77C57;
+  --sidebar-accent-foreground: #1C1C1C;
+
+  /* UI элементы */
+  --border: #E3C5A0;
+  --input: #918060;
+  --ring: #F2B17A;
+  --radius: 0.625rem;
+
+    /* Цвета для керамики */
+  --color-ceramic-cool: #B8E9F5;
+  --color-ceramic-warm: #F0A975;
+  --color-ceramic-fire: #D17A4C;
+  --color-ceramic-clay: #E3C5A0;
+  --color-ceramic-kiln: #5C3A21;
+  --color-ceramic-glaze: #F2B17A;
+  
+  /* Температурные зоны */
+  --color-temperature-low: #B8E9F5;
+  --color-temperature-medium: #F0A975;
+  --color-temperature-high: #D17A4C;
+  --color-temperature-extreme: #8C3F28;
+
+
+    /* Новые переменные для кнопок */
+  --button-outline-border: var(--primary);
+  --button-outline-text: var(--primary);
+  --button-outline-hover-bg: #D17A4C1A; /* Полупрозрачный цвет */
+}
+
+.dark {
+  --background: #3A2B20;       /* тёмная глина */
+  --foreground: #F5E3D0;       /* светлый текст */
+  --card: #5C3A21;
+  --card-foreground: #e9bd8f;
+  --color-card-light: #754427d3; /* чуть светлее #3A2B20 */
+  --popover: #7C4F36;
+  --popover-foreground: #eea95e;
+
+  --primary: #D17A4C;
+  --primary-foreground: #F5E3D0;
+  --secondary: #B74C2C;
+  --secondary-foreground: #F5E3D0;
+  --accent: #F0A975;
+  --accent-foreground: #3A2B20;
+  --destructive: #FF3D00;
+
+  --chart-1: #FF9B55;
+  --chart-2: #FF7A3C;
+  --chart-3: #FF8050;
+  --chart-4: #D94F2A;
+  --chart-5: #B8321F;
+
+  --sidebar: #5C3A21;
+  --sidebar-foreground: #F5E3D0;
+  --sidebar-primary: #D17A4C;
+  --sidebar-primary-foreground: #F5E3D0;
+  --sidebar-accent: #B74C2C;
+  --sidebar-accent-foreground: #F5E3D0;
+
+  --border: #A06F4D; /* Сделано светлее для лучшей видимости контуров */
+  --input: #5C3A21;
+  --ring: #D17A4C;
+
+    /* Цвета для керамики в темной теме */
+  --color-ceramic-cool: #7AB8C8;
+  --color-ceramic-warm: #D9925A;
+  --color-ceramic-fire: #B85B36;
+  --color-ceramic-clay: #C9A985;
+  --color-ceramic-kiln: #7C4F36;
+  --color-ceramic-glaze: #E68B5C;
+  
+  /* Температурные зоны в темной теме */
+  --color-temperature-low: #7AB8C8;
+  --color-temperature-medium: #D9925A;
+  --color-temperature-high: #B85B36;
+  --color-temperature-extreme: #5C3A21;
+  --axis-stroke-dark: #C9A985; /* Более светлый и заметный цвет для осей */
+  --grid-stroke-dark: #A06F4D; /* Заметный, но не отвлекающий цвет для сетки */
+  --button-outline-border: var(--primary);
+  --button-outline-text: var(--primary-foreground);
+  --button-outline-hover-bg: #F5E3D01A; /* Полупрозрачный цвет */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

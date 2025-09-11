@@ -3,7 +3,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/navbar';
 import { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 const inter = Inter({ subsets: ['latin'] });

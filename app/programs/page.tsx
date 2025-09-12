@@ -7,7 +7,7 @@ import { usePrograms } from '@/hooks/usePrograms';
 import ProgramList from '@/components/ProgramList';
 import FiringProgramTable from '@/components/FiringProgramEditor';
 import FiringProgramChart from '@/components/FiringProgramChart';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent} from '@/components/ui/card';
 import DeviceParametersCharts from '@/components/DeviceParametersCharts';
 import { toast } from 'react-hot-toast'; // Опционально: для уведомлений
 

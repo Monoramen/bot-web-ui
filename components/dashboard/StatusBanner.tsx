@@ -1,8 +1,12 @@
-'use client'
+'use client';
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const StatusBanner = ({ isCritical }) => {
+interface StatusBannerProps {
+  isCritical: boolean;
+}
+
+const StatusBanner = ({ isCritical }: StatusBannerProps) => {
     if (!isCritical) return null;
 
     return (

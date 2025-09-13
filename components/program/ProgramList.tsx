@@ -3,11 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
+import { Program } from '@/types/session';
 
-interface Program {
-  id: number;
-  name: string;
-}
 
 interface ProgramListProps {
   programs: Program[];

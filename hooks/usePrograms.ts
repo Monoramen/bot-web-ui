@@ -1,5 +1,8 @@
+// src/hooks/usePrograms.ts
 'use client';
+
 import { useState, useEffect } from 'react';
+import { ApiService } from '@/services/apiService';
 
 export function usePrograms() {
   const [programs, setPrograms] = useState<any[]>([]);
@@ -9,12 +12,10 @@ export function usePrograms() {
   const fetchPrograms = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:9090/api/firing-programs');
-      if (!res.ok) throw new Error('Failed to fetch programs');
-      const data = await res.json();
+      const data = await ApiService.getFiringPrograms(); // 👈 добавим этот метод в ApiService
       setPrograms(data);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Неизвестная ошибка');
     } finally {
       setLoading(false);
     }
@@ -28,7 +29,7 @@ export function usePrograms() {
     programs,
     loading,
     error,
-    reload: fetchPrograms, // 👈 сюда добавили
-    setPrograms,           // 👈 чтобы можно было вручную обновить один элемент
+    reload: fetchPrograms,
+    setPrograms,
   };
 }

@@ -1,0 +1,5 @@
+cd .\bot-hub-backend\ && git checkout main && git pull origin main && cd ..
+cd .\bot-web-ui\ && git checkout main && git pull origin main && cd ..
+git add bot-hub-backend bot-web-ui
+git commit -m "update submodules"
+git push

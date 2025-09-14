@@ -25,6 +25,7 @@ export interface FiringSession {
   start_time: string;
   end_time?: string;
   status: string;
+  
   actual_duration_minutes?: number;
   max_recorded_temperature?: number;
   notes?: string;
@@ -37,16 +38,6 @@ export interface ChartDataPoint {
   targetTemp?: number;
 }
 
-export interface FiringProgram {
-  name: string;
-  description?: string;
-  steps: {
-    step_number: number;
-    ramp_time_minutes: number;
-    hold_time_minutes: number;
-    target_temperature_c: number;
-  }[];
-}
 
 export interface Program {
   id: number;

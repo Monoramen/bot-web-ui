@@ -118,7 +118,7 @@ async getProgramDataForSession(sessionId: string): Promise<FiringProgram> {
     }
     return response.json();
   },
-    async getCurrentProgram(): Promise<number> {
+    async getCurrentProgram(unitId: number): Promise<number> {
     const response = await fetch(`${API_BASE_URL}/firing-management/current-program`);
     if (!response.ok) {
       throw new Error('Failed to fetch current program');
@@ -199,5 +199,15 @@ async getDeviceProgramById(programId: number): Promise<Program> {
   const response = await fetch(`${API_BASE_URL}/firing-programs/device/program/${programId}`);
   await handleResponse(response);
   return response.json();
+},
+
+
+async getCurrentPower(): Promise<number> {
+  const response = await fetch(`${API_BASE_URL}/firing-management/current-power`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch current power');
+  }
+  const data = await response.json();
+  return data; // или просто `return data;`, если API возвращает число
 }
 };

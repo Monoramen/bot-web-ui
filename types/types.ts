@@ -13,7 +13,9 @@ export interface Program {
   steps: Step[];
 }
 
+// types/session.ts
 export interface ChartDataPoint {
-  time: number;
-  temperature: number;
+  time: string;
+  temperature: number | null;   // ← explicitly allow null
+  targetTemp: number | null;    // ← explicitly allow null
 }

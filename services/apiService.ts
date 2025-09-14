@@ -5,10 +5,11 @@ import {Program} from '@/types/types';
 
 // src/services/apiService.ts
 
-const API_BASE_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_URL // ← http://localhost:9090/api
-    : '/api'; // ← для продакшена, где rewrites работают
+// const API_BASE_URL =
+//   process.env.NODE_ENV === 'development'
+//     ? process.env.NEXT_PUBLIC_API_URL // ← http://localhost:9090/api
+//     : '/api'; // ← для продакшена, где rewrites работают
+const API_BASE_URL = '/api';
 
 // Утилита для обработки ошибок
 const handleResponse = async (response: Response) => {

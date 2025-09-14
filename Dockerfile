@@ -2,7 +2,7 @@
 FROM node:22-alpine
 
 # Устанавливаем рабочую директорию
-WORKDIR /trm-251-firing-manager
+WORKDIR /app
 
 
 # Копируем package.json и package-lock.json

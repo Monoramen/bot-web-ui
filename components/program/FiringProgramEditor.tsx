@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2, Upload, Download } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -21,7 +21,10 @@ interface FiringProgramEditorProps {
   onCancel: () => void;
   onDelete?: () => void;
   onDeploySuccess?: () => void;
+  onFetchFromDevice?: () => void; // ✅ Добавлено
 }
+
+// ... импорты остались без изменений
 
 const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
   programId,
@@ -36,13 +39,17 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
     setProgramName,
     isLoading,
     isDeploying,
+    isFetchingFromDevice,
     handleChange,
     handleSave,
     handleDeploy,
+    handleFetchFromDevice
   } = useFiringProgramEditor({
     programId,
     onSave,
     onDeploySuccess,
+    onCancel,
+    onDelete,
   });
 
   return (
@@ -147,45 +154,78 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
       </CardContent>
 
       <CardFooter className="flex flex-col sm:flex-col gap-4 p-4 min-h-[96px]">
-        {/* ✅ ВСЕГДА рендерим первую строку, но скрываем, если programId === null */}
-        <div
-          className={`flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-3 transition-opacity duration-200 ${
-            programId !== null ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-          }`}
-        >
-          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-            Загрузить на устройство:
-          </span>
-          <div className="flex flex-wrap items-center gap-2">
-            {[1, 2, 3].map((slot) => (
-              <TooltipProvider key={slot}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-1.5 transition-all hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20"
-                      onClick={() => handleDeploy(slot)}
-                      disabled={isDeploying[slot]}
-                    >
-                      {isDeploying[slot] ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      ) : (
-                        <Upload className="h-3.5 w-3.5" />
-                      )}
-                      <span>П{slot}</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="bg-primary text-primary-foreground border-none">
-                    <p>Загрузить программу в слот Программа &apos;{slot}&apos; устройства</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ))}
-          </div>
-        </div>
 
-        {/* ✅ Вторая строка: всегда видна */}
+
+
+          {/* Выгрузка из устройства (Download) */}
+<div className="flex flex-wrap items-center gap-2 w-full pt-2">
+  {/* Группа: Выгрузка из ПУ */}
+  <div className="flex items-center gap-1">
+    <Download className="h-3.5 w-3.5 text-muted-foreground" />
+    <span className="text-xs text-muted-foreground">Из ПУ:</span>
+  </div>
+  {[1, 2, 3].map((slot) => (
+    <TooltipProvider key={`fetch-${slot}`}>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 px-1.5 h-7 text-[10px] transition-all hover:bg-secondary/80 hover:text-secondary-foreground"
+            onClick={() => handleFetchFromDevice(slot)}
+            disabled={isFetchingFromDevice[slot]}
+          >
+            {isFetchingFromDevice[slot] ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Download className="h-3 w-3" />
+            )}
+            <span>P{slot}</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="bg-secondary text-secondary-foreground border-none text-xs">
+          <p>Выгрузить из слота P{slot}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ))}
+
+  {/* Разделитель */}
+  <div className="w-px h-6 bg-border/50 mx-2"></div>
+
+  {/* Группа: Загрузка в ПУ */}
+  <div className="flex items-center gap-1">
+    <Upload className="h-3.5 w-3.5 text-muted-foreground" />
+    <span className="text-xs text-muted-foreground">В ПУ:</span>
+  </div>
+  {[1, 2, 3].map((slot) => (
+    <TooltipProvider key={`deploy-${slot}`}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 px-1.5 h-7 text-[10px] transition-all hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20"
+            onClick={() => handleDeploy(slot)}
+            disabled={isDeploying[slot]}
+          >
+            {isDeploying[slot] ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Upload className="h-3 w-3" />
+            )}
+            <span>P{slot}</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="bg-primary text-primary-foreground border-none text-xs">
+          <p>Загрузить в слот P{slot}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ))}
+</div>
+        {/* ✅ ВТОРАЯ СТРОКА: всегда видна — действия сохранения/удаления */}
         <div className="flex flex-col sm:flex-row sm:justify-end w-full gap-2">
           {programId !== null && onDelete && (
             <Button variant="destructive" onClick={onDelete} className="text-sm" disabled={isLoading}>
@@ -209,3 +249,4 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
 };
 
 export default FiringProgramEditor;
+

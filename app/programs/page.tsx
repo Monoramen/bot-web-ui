@@ -109,24 +109,24 @@ const handleSaveProgram = async (
 
         {/* Средняя колонка: редактор */}
         <div className="flex-1 lg:w-1/3 flex flex-col gap-6">
-          <FiringProgramTable
-            programId={selectedProgramId}
-              onSave={(data) => {
-                 if (data) {
-                    handleSaveProgram(data);
-                  }
-             }}
-            onDelete={
-              selectedProgramId !== null
-                ? () => handleDeleteProgram(selectedProgramId)
-                : undefined
-            }
-            onCancel={() => setSelectedProgramId(null)}
-            onDeploySuccess={() => {
-              // ✅ Просто триггер — ProgramLoader сам обновится
-              console.log('✅ onDeploySuccess вызван — ProgramLoader обновит данные');
-            }}
-          />
+      <FiringProgramTable
+        programId={selectedProgramId}
+        onSave={(data) => {
+          if (data) {
+            handleSaveProgram(data);
+          }
+        }}
+        onDelete={
+          selectedProgramId !== null
+            ? () => handleDeleteProgram(selectedProgramId)
+            : undefined
+        }
+        onCancel={() => setSelectedProgramId(null)}
+        onDeploySuccess={() => {
+          console.log('✅ onDeploySuccess вызван — ProgramLoader обновит данные');
+        }}
+        onFetchFromDevice={() => setSelectedProgramId(null)} // ✅ Новый проп
+      />
         </div>
 
         {/* Правая колонка: график */}

@@ -39,118 +39,118 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Фон и интерфейс */
-  --background: #F5E3D0;        /* светлая глина */
-  --foreground: #1C1C1C;        /* чёрный текст */
-  --card: #e2dfd28f;              /* светлая карточка */
-  --card-foreground: #1C1C1C;
-  --color-card-light: #faf5f0; /* чуть светлее #F5E3D0 */
-  --popover: #F1D9B0;
-  --popover-foreground: #1C1C1C;
+  /* Фон и интерфейс: Светлая, сероватая палитра */
+  --background: #E8E9EA;        /* светлый серый фон */
+  --foreground: #343A40;        /* тёмно-серый текст */
+  --card: #DCE0E3;              /* более мягкий серый фон карточки */
+  --card-foreground: #343A40;
+  --color-card-light: #F0F0F2; /* чуть светлее фона */
+  --popover: #DCE0E3;           /* приглушенный поповер */
+  --popover-foreground: #343A40;
 
   /* Акценты */
-  --primary: #D17A4C;           /* огненно-глиняный */
+  --primary: #6C757D;           /* основной серо-синий */
   --primary-foreground: #FFFFFF;
-  --secondary: #B77C57;         /* обожжённая глина */
-  --secondary-foreground: #1C1C1C;
-  --accent: #F0A975;            /* мягкий свет */
-  --accent-foreground: #1C1C1C;
-  --destructive: #b61d12;       /* опасное действие */
+  --secondary: #ADB5BD;         /* более светлый серый */
+  --secondary-foreground: #343A40;
+  --accent: #939CA3;            /* приглушенный мягкий акцент */
+  --accent-foreground: #343A40;
+  --destructive: #E03131;       /* опасное действие */
 
   /* Графики */
---chart-1: #FF9B55; /* насыщенный оранжевый */
---chart-2: #FF6F3C; /* яркий красно-оранжевый */
---chart-3: #FF8050; /* коралловый */
---chart-4: #D94F2A; /* тёплый красный */
---chart-5: #B8321F; /* глубокий красный */
+  --chart-1: #6C757D;
+  --chart-2: #495057;
+  --chart-3: #ADB5BD;
+  --chart-4: #CED4DA;
+  --chart-5: #939CA3;
 
   /* Сайдбар */
-  --sidebar: #F5E3D0;
-  --sidebar-foreground: #1C1C1C;
-  --sidebar-primary: #D17A4C;
+  --sidebar: #DCE0E3;
+  --sidebar-foreground: #343A40;
+  --sidebar-primary: #6C757D;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #B77C57;
-  --sidebar-accent-foreground: #1C1C1C;
+  --sidebar-accent: #ADB5BD;
+  --sidebar-accent-foreground: #343A40;
 
   /* UI элементы */
-  --border: #E3C5A0;
-  --input: #918060;
-  --ring: #F2B17A;
+  --border: #CED4DA;
+  --input: #A9AEB2;
+  --ring: #939CA3;             /* более мягкий цвет для обводки */
   --radius: 0.625rem;
 
-    /* Цвета для керамики */
-  --color-ceramic-cool: #B8E9F5;
-  --color-ceramic-warm: #F0A975;
-  --color-ceramic-fire: #D17A4C;
-  --color-ceramic-clay: #E3C5A0;
-  --color-ceramic-kiln: #5C3A21;
-  --color-ceramic-glaze: #F2B17A;
+  /* Цвета для керамики */
+  --color-ceramic-cool: #C2D5E1;
+  --color-ceramic-warm: #8BA8BF;
+  --color-ceramic-fire: #6C757D;
+  --color-ceramic-clay: #B3C1CC;
+  --color-ceramic-kiln: #404B57;
+  --color-ceramic-glaze: #A3B5C7;
   
   /* Температурные зоны */
-  --color-temperature-low: #B8E9F5;
-  --color-temperature-medium: #F0A975;
-  --color-temperature-high: #D17A4C;
-  --color-temperature-extreme: #8C3F28;
+  --color-temperature-low: #C2D5E1;
+  --color-temperature-medium: #8BA8BF;
+  --color-temperature-high: #6C757D;
+  --color-temperature-extreme: #404B57;
 
-
-    /* Новые переменные для кнопок */
+  /* Новые переменные для кнопок */
   --button-outline-border: var(--primary);
-  --button-outline-text: var(--primary);
-  --button-outline-hover-bg: #D17A4C1A; /* Полупрозрачный цвет */
+  --button-outline-text: var(--primary-foreground);
+  --button-outline-hover-bg: color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 .dark {
-  --background: #3A2B20;       /* тёмная глина */
-  --foreground: #F5E3D0;       /* светлый текст */
-  --card: #5C3A21;
-  --card-foreground: #e9bd8f;
-  --color-card-light: #754427d3; /* чуть светлее #3A2B20 */
-  --popover: #7C4F36;
-  --popover-foreground: #eea95e;
+  /* Фон и интерфейс: Более светлая и разнообразная темная тема */
+  --background: #343A40;       /* тёмно-серый фон */
+  --foreground: #F8F9FA;       /* очень светлый текст */
+  --card: #495057;             /* чуть светлее фона */
+  --card-foreground: #F8F9FA;
+  --color-card-light: #5B636C;
+  --popover: #495057;           /* более мягкий поповер */
+  --popover-foreground: #F8F9FA;
 
-  --primary: #D17A4C;
-  --primary-foreground: #F5E3D0;
-  --secondary: #B74C2C;
-  --secondary-foreground: #F5E3D0;
-  --accent: #F0A975;
-  --accent-foreground: #3A2B20;
+  --primary: #5C94B9;
+  --primary-foreground: #E8F2F7;
+  --secondary: #50766B;
+  --secondary-foreground: #E8F2F7;
+  --accent: #8D76A5;           /* приглушенный акцент для темной темы */
+  --accent-foreground: #E8F2F7;
   --destructive: #FF3D00;
 
-  --chart-1: #FF9B55;
-  --chart-2: #FF7A3C;
-  --chart-3: #FF8050;
-  --chart-4: #D94F2A;
-  --chart-5: #B8321F;
+  --chart-1: #5C94B9;
+  --chart-2: #50766B;
+  --chart-3: #8D76A5;
+  --chart-4: #4B6B82;
+  --chart-5: #3F596B;
 
-  --sidebar: #5C3A21;
-  --sidebar-foreground: #F5E3D0;
-  --sidebar-primary: #D17A4C;
-  --sidebar-primary-foreground: #F5E3D0;
-  --sidebar-accent: #B74C2C;
-  --sidebar-accent-foreground: #F5E3D0;
+  --sidebar: #495057;
+  --sidebar-foreground: #F8F9FA;
+  --sidebar-primary: #5C94B9;
+  --sidebar-primary-foreground: #E8F2F7;
+  --sidebar-accent: #50766B;
+  --sidebar-accent-foreground: #E8F2F7;
 
-  --border: #A06F4D; /* Сделано светлее для лучшей видимости контуров */
-  --input: #5C3A21;
-  --ring: #D17A4C;
+  --border: #6C757D;
+  --input: #5C666E;
+  --ring: #849BAA;
 
-    /* Цвета для керамики в темной теме */
-  --color-ceramic-cool: #7AB8C8;
-  --color-ceramic-warm: #D9925A;
-  --color-ceramic-fire: #B85B36;
-  --color-ceramic-clay: #C9A985;
+  /* Цвета для керамики в темной теме */
+  --color-ceramic-cool: #8CB9E1;
+  --color-ceramic-warm: #E2C091;
+  --color-ceramic-fire: #D17A4C;
+  --color-ceramic-clay: #A06F4D;
   --color-ceramic-kiln: #7C4F36;
-  --color-ceramic-glaze: #E68B5C;
+  --color-ceramic-glaze: #D9925A;
   
   /* Температурные зоны в темной теме */
-  --color-temperature-low: #7AB8C8;
-  --color-temperature-medium: #D9925A;
-  --color-temperature-high: #B85B36;
-  --color-temperature-extreme: #5C3A21;
-  --axis-stroke-dark: #C9A985; /* Более светлый и заметный цвет для осей */
-  --grid-stroke-dark: #A06F4D; /* Заметный, но не отвлекающий цвет для сетки */
+  --color-temperature-low: #C4DFF5;
+  --color-temperature-medium: #8CB9E1;
+  --color-temperature-high: #4A90E2;
+  --color-temperature-extreme: #1C4E80;
+  --axis-stroke-dark: #A9B1B7;
+  --grid-stroke-dark: #6C757D;
   --button-outline-border: var(--primary);
   --button-outline-text: var(--primary-foreground);
-  --button-outline-hover-bg: #F5E3D01A; /* Полупрозрачный цвет */
+  --button-outline-hover-bg: color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 @layer base {
@@ -160,4 +160,39 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer components {
+  /* Outline кнопки — для P1/P2/P3 */
+  .btn-outline-ceramic {
+    @apply border-2 text-foreground transition-all duration-200 shadow-md; /* Увеличение толщины границы и добавление тени */
+    border-color: var(--button-outline-border) !important;
+    color: var(--button-outline-text) !important;
+  }
+
+  .btn-outline-ceramic:hover {
+    @apply -translate-y-0.5 shadow-lg scale-105; /* Небольшой подъем, более выраженная тень и легкое увеличение размера при наведении */
+    background-color: var(--secondary) !important; /* Более заметный фон при наведении */
+    border-color: var(--secondary) !important; /* Изменение цвета границы */
+    color: var(--secondary-foreground) !important;
+  }
+
+  .btn-outline-ceramic:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Для иконок внутри кнопок — чтобы не терялись */
+  .btn-outline-ceramic svg {
+    color: var(--button-outline-text) !important;
+  }
+}
+
+.btn-loading {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }

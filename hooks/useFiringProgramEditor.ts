@@ -22,7 +22,10 @@ const createDefaultSteps = (): ProgramStep[] => {
 interface UseFiringProgramEditorProps {
   programId: number | null;
   onSave: (data: Omit<FiringProgram, 'id'> & { id?: number }) => void; // ✅ id опционален
+  onCancel: () => void;
+  onDelete?: () => void;
   onDeploySuccess?: () => void;
+  onFetchFromDevice?: () => void; // ✅ Добавлено
 }
 
 export const useFiringProgramEditor = ({
@@ -34,7 +37,8 @@ export const useFiringProgramEditor = ({
   const [programName, setProgramName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDeploying, setIsDeploying] = useState<{ [key: number]: boolean }>({ 1: false, 2: false, 3: false });
-
+// Добавь состояние для отслеживания "выгрузки"
+  const [isFetchingFromDevice, setIsFetchingFromDevice] = useState<{ [key: number]: boolean }>({ 1: false, 2: false, 3: false });
   // Загрузка программы при изменении programId
   useEffect(() => {
     const fetchProgram = async () => {
@@ -62,7 +66,40 @@ export const useFiringProgramEditor = ({
 
     fetchProgram();
   }, [programId]);
+// Выгрузка программы ИЗ устройства в редактор
+const handleFetchFromDevice = async (deviceProgramId: number) => {
+  if (onFetchFromDevice) {
+  onFetchFromDevice(); // Сбросим programId на уровне страницы
+  }
+  setIsFetchingFromDevice((prev) => ({ ...prev, [deviceProgramId]: true }));
 
+  try {
+    const deviceProgram = await ApiService.getDeviceProgramById(deviceProgramId);
+
+    // Подставляем имя
+    setProgramName(deviceProgram.name || `Программа с устройства P${deviceProgramId}`);
+
+    // Подставляем шаги (максимум 5, остальное обрезаем, недостающее заполняем пустыми)
+    let loadedSteps = (deviceProgram.steps || []).slice(0, 5);
+    while (loadedSteps.length < 5) {
+      loadedSteps.push(createEmptyStep(loadedSteps.length));
+    }
+    setSteps(loadedSteps);
+
+    // Опционально: сбросить selectedProgramId, если мы в режиме создания новой
+    // (это нужно на уровне компонента, а не хука — см. ниже)
+
+    toast.success(`Программа загружена из слота P${deviceProgramId}`);
+    if (onDeploySuccess) {
+      onDeploySuccess(); // Триггерим обновление ProgramLoader
+    }
+  } catch (err: any) {
+    console.error(`Ошибка выгрузки из P${deviceProgramId}:`, err);
+    toast.error(`Не удалось выгрузить из P${deviceProgramId}: ${err.message || 'Ошибка связи'}`);
+  } finally {
+    setIsFetchingFromDevice((prev) => ({ ...prev, [deviceProgramId]: false }));
+  }
+};
   // Изменение шага
   const handleChange = (index: number, key: keyof ProgramStep, value: string) => {
     const newSteps = [...steps];
@@ -114,8 +151,10 @@ export const useFiringProgramEditor = ({
     setProgramName,
     isLoading,
     isDeploying,
+    isFetchingFromDevice, 
     handleChange,
     handleSave,
     handleDeploy,
+    handleFetchFromDevice, 
   };
 };

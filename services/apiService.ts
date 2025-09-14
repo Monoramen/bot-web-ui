@@ -3,7 +3,9 @@ import { FiringSession, FiringProgram,TemperatureReading } from '@/types/session
 import {Program} from '@/types/types';
 // src/services/apiService.ts
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9090/api';
+// src/services/apiService.ts
+
+const API_BASE_URL = '/api'; // <-- ВОТ И ВСЁ ИЗМЕНЕНИЕ!
 
 
 

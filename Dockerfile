@@ -13,8 +13,8 @@ RUN npm install
 ## --legacy-peer-deps
 # Копируем исходный код
 COPY . .
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ARG API_PROXY_URL
+ENV API_PROXY_URL=$API_PROXY_URL
 # Собираем приложение
 RUN npx next build
 

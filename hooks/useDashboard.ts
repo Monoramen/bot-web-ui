@@ -19,7 +19,7 @@ export const useDashboard = (unitId: number = 16) => {
   const [loadingProgram, setLoadingProgram] = useState(false);
   
   // Телеметрия
-  const [currentTemp, setCurrentTemp] = useState(25);
+  const [currentTemp, setCurrentTemp] = useState();
   const [heaterPower, setHeaterPower] = useState(0);
   const [currentStage, setCurrentStage] = useState("—");
   const [remainingTime, setRemainingTime] = useState("--:--");
@@ -56,17 +56,33 @@ export const useDashboard = (unitId: number = 16) => {
   // Загрузка статуса
 const fetchStatus = async () => {
   try {
-    const statusText = await ApiService.getStatus(unitId);
-    setDeviceStatus(statusText);
-  } catch (error) {
+    const res = await ApiService.getStatus(); // без unitId, как у вас
+    console.log('getStatus raw:', res);
+    const statusText = typeof res === 'string' ? res : (res.status ?? res.message ?? JSON.stringify(res));
+    setDeviceStatus(statusText || 'Статус недоступен');
+  } catch (error: any) {
     console.error("Ошибка загрузки статуса:", error);
-    if (error instanceof Error && error.message.includes('404')) {
+
+    // Попrobуем извлечь код ответа
+    const statusCode =
+      error?.response?.status ??
+      (typeof error.message === 'string' && (error.message.match(/HTTP\s+(\d{3})/) || error.message.match(/"status":\s*(\d{3})/))
+        ? Number((error.message.match(/HTTP\s+(\d{3})/) || error.message.match(/"status":\s*(\d{3})/))![1])
+        : null);
+
+    // Если backend явно вернул 404 для конкретного устройства (и у вас есть уверенность, что это означает "устройство не найдено"),
+    // можно установить соответствующий статус. Но общий 404 на /api/status будем считать временной ошибкой связи.
+    if (statusCode === 404 && error?.response?.data && typeof error.response.data === 'object' && /Not Found/i.test(JSON.stringify(error.response.data))) {
+      // только в случае, когда backend явно сообщает Not Found о конкретном устройстве
       setDeviceStatus("Устройство не найдено");
     } else {
-      setDeviceStatus("Ошибка связи с устройством");
+      // не блокируем страницу, показываем нейтральный текст и даём возможность повторного запроса
+      setDeviceStatus("Статус недоступен"); // или "Ошибка связи с устройством"
     }
   }
 };
+
+
   // Загрузка текущей программы устройства (мемоизированная версия)
 const fetchCurrentProgram = useCallback(async () => {
   if (isFetchingProgramRef.current) return;

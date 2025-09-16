@@ -44,13 +44,8 @@ export default function DashboardPage() {
     setSelectedFiring(firing);
     setIsModalOpen(true);
   };
-  if (deviceStatus === "Устройство не найдено") {
-    return (
-      <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
-        <div className="text-lg text-red-500">Устройство с ID не найдено.</div>
-      </div>
-    );
-  }
+
+
   // Показываем лоадер пока загружаются данные
   if (isLoadingRecent) {
     return (

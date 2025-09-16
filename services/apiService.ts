@@ -3,12 +3,6 @@ import { FiringSession, FiringProgram,TemperatureReading } from '@/types/session
 import {Program} from '@/types/types';
 // src/services/apiService.ts
 
-// src/services/apiService.ts
-
-// const API_BASE_URL =
-//   process.env.NODE_ENV === 'development'
-//     ? process.env.NEXT_PUBLIC_API_URL // ← http://localhost:9090/api
-//     : '/api'; // ← для продакшена, где rewrites работают
 const API_BASE_URL = '/api';
 
 // Утилита для обработки ошибок
@@ -23,8 +17,8 @@ const handleResponse = async (response: Response) => {
 export const ApiService = {
   // Получить статус устройства
 
-  async getStatus(unitId: number): Promise<string> {
-    const res = await fetch(`/api/status/${unitId}`);
+  async getStatus(): Promise<string> {
+    const res = await fetch(`${API_BASE_URL}/firing-management/status`);
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}: ${await res.text()}`);
     }
@@ -66,14 +60,16 @@ export const ApiService = {
   },
 
   // Получить текущую температуру
-  async getTemperature(): Promise<number> {
-    const response = await fetch(`${API_BASE_URL}/runtime/temp`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch temperature');
-    }
-    const data = await response.json();
-    return data.temperature;
-  },
+// В ApiService.getTemperature()
+async getTemperature(): Promise<number> {
+  const response = await fetch(`${API_BASE_URL}/runtime/temp`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch temperature');
+  }
+  const data = await response.json();
+  console.log('Temperature API response:', data); // ✅ Добавьте это
+  return data.temperature;
+},
 
   // Получить данные сессии по ID
   async getSessionData(sessionId: string): Promise<FiringSession> {

@@ -1,5 +1,4 @@
 // src/hooks/useTemperature.ts
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -14,11 +13,12 @@ export const useTemperature = () => {
       setLoading(true);
       const tempValue = await ApiService.getTemperature();
 
-      // Защита от "космических" значений
-      if (tempValue > 1 || tempValue < -1400) {
-        setCurrentTemp(25); // fallback
-      } else {
+      // ✅ ПРАВИЛЬНОЕ условие: температура должна быть между 1 и 1400
+      if (tempValue >= 1 && tempValue <= 1400) {
         setCurrentTemp(Math.round(tempValue));
+      } else {
+        console.warn(`Некорректное значение температуры: ${tempValue}, используем fallback`);
+        setCurrentTemp(25); // fallback только для некорректных значений
       }
     } catch (error) {
       console.error('Ошибка получения температуры:', error);

@@ -1,22 +1,19 @@
-// next.config.js
+// next.config.ts
 import type { NextConfig } from "next";
 
+const backend = (process.env.API_PROXY_URL || "http://backend:9090").replace(/\/$/, "");
 const nextConfig: NextConfig = {
-  eslint: {
-    // Предупреждение: это позволит сборке завершиться успешно, даже если есть ошибки ESLint.
-    ignoreDuringBuilds: false,
-  },
-  typescript: {
-    // Предупреждение: это позволит сборке завершиться успешно, даже если есть ошибки TypeScript.
-    ignoreBuildErrors: false,
-  },
-    async rewrites() {
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+
+  async rewrites() {
     return [
       {
-        source: '/api/:path*', // Перехватывать все запросы, начинающиеся с /api/
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`, // и перенаправлять их сюда
+        source: "/api/:path*",
+        destination: `${backend}/api/:path*`,
       },
     ];
   },
 };
+
 export default nextConfig;

@@ -11,11 +11,41 @@ interface UseFiringProgramChartProps {
   programData?: FiringProgram;
 }
 
+interface ProgramWithTimeScale extends FiringProgram {
+  timeScale?: number; // 0 = часы/минуты, 1 = минуты/секунды
+}
+
 export const useFiringProgramChart = ({ programId, programData }: UseFiringProgramChartProps) => {
-  const [program, setProgram] = useState<FiringProgram | null>(null);
+  const [program, setProgram] = useState<ProgramWithTimeScale | null>(null);
   const [chartData, setChartData] = useState<{ time: number; temperature: number }[]>([]);
   const [isDark, setIsDark] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Функция преобразования времени из формата устройства в секунды
+  const convertDeviceTimeToSeconds = (timeValue: number, scale: number = 0) => {
+    if (scale === 0) {
+      // Режим "часы/минуты": HHMM → секунды
+      const hours = Math.floor(timeValue / 100);
+      const minutes = timeValue % 100;
+      return hours * 3600 + minutes * 60;
+    } else {
+      // Режим "минуты/секунды": MMSS → секунды
+      const minutes = Math.floor(timeValue / 100);
+      const seconds = timeValue % 100;
+      return minutes * 60 + seconds;
+    }
+  };
+
+  // Функция преобразования данных графика с учетом масштаба времени
+  const transformChartData = (programData: ProgramWithTimeScale) => {
+    const rawChartData = generateChartData(programData);
+    const timeScale = programData.timeScale || 0; // По умолчанию часы/минуты
+
+    return rawChartData.map(item => ({
+      ...item,
+      time: convertDeviceTimeToSeconds(item.time, timeScale) / 60, // Конвертируем в минуты
+    }));
+  };
 
   // Отслеживаем тему
   useEffect(() => {
@@ -38,8 +68,9 @@ export const useFiringProgramChart = ({ programId, programData }: UseFiringProgr
   // Загружаем или обновляем данные программы
   useEffect(() => {
     if (programData) {
-      setProgram(programData);
-      setChartData(generateChartData(programData));
+      const programWithTimeScale = programData as ProgramWithTimeScale;
+      setProgram(programWithTimeScale);
+      setChartData(transformChartData(programWithTimeScale));
       return;
     }
 
@@ -52,9 +83,10 @@ export const useFiringProgramChart = ({ programId, programData }: UseFiringProgr
     const fetchProgram = async () => {
       setIsLoading(true);
       try {
-        const data = await ApiService.getFiringProgramForChart(programId);
+        // Предполагаем, что API возвращает программу с полем timeScale
+        const data = await ApiService.getFiringProgramForChart(programId) as ProgramWithTimeScale;
         setProgram(data);
-        setChartData(generateChartData(data));
+        setChartData(transformChartData(data));
       } catch (error) {
         console.error('Error fetching program:', error);
         setChartData([]);

@@ -29,16 +29,40 @@ const programColors = [
   'var(--chart-5)',
 ];
 
+// ✅ Функция для форматирования минут в читаемый вид
+const formatMinutes = (minutes: number) => {
+  if (minutes < 60) {
+    return `${Math.round(minutes)} мин`; // Округляем до целых
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = Math.round(minutes % 60); // Округляем до целых
+  return remainingMinutes > 0 
+    ? `${hours}ч ${remainingMinutes}мин` 
+    : `${hours}ч`;
+};
+
+// ✅ Функция для преобразования секунд в минуты и форматирования
+const formatSecondsToReadable = (seconds: number) => {
+  const minutes = seconds / 60; // Конвертируем секунды в минуты
+  return formatMinutes(minutes);
+};
+
 const FiringProgramChart: React.FC<FiringProgramChartProps> = ({ programId, programData }) => {
   const { program, chartData, isDark, isLoading } = useFiringProgramChart({
     programId,
     programData,
   });
 
+  // ✅ Преобразуем данные: секунды → минуты
+  const formattedChartData = chartData.map(item => ({
+    ...item,
+    time: item.time / 60, // Конвертируем секунды в минуты
+  }));
+
   if (!programId) {
     return (
-      <div className=" flex items-center justify-center  h-full min-h-[300px]">
-        <p className="text-muted-foreground  md:p-6">Выберите программу для отображения графика</p>
+      <div className="flex items-center justify-center h-full min-h-[300px]">
+        <p className="text-muted-foreground md:p-6">Выберите программу для отображения графика</p>
       </div>
     );
   }
@@ -62,7 +86,7 @@ const FiringProgramChart: React.FC<FiringProgramChartProps> = ({ programId, prog
   return (
     <div className="w-full h-full min-h-[180px] p-2">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+        <LineChart data={formattedChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id={`colorTemperature${program.id}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={currentProgramColor} stopOpacity={0.8} />
@@ -78,9 +102,10 @@ const FiringProgramChart: React.FC<FiringProgramChartProps> = ({ programId, prog
             axisLine={{ stroke: axisColor }}
             tickLine={{ stroke: axisColor }}
             interval="preserveStartEnd"
+            tickFormatter={formatMinutes} // ✅ Используем форматирование минут
           >
             <Label
-              value="Время (мин)"
+              value="Время"
               position="insideBottom"
               fill={textColor}
               offset={0}
@@ -115,7 +140,7 @@ const FiringProgramChart: React.FC<FiringProgramChartProps> = ({ programId, prog
             }}
             labelStyle={{ color: textColor, fontWeight: '600' }}
             formatter={(value) => [`${value}°C`, 'Температура']}
-            labelFormatter={(time) => `Время: ${time} мин`}
+            labelFormatter={(minutes) => `Время: ${formatMinutes(minutes)}`} // ✅ Форматируем минуты
           />
 
           <Legend

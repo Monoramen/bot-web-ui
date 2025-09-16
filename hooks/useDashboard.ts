@@ -54,34 +54,39 @@ export const useDashboard = (unitId: number = 16) => {
   const isFetchingProgramRef = useRef(false);
 
   // Загрузка статуса
-  const fetchStatus = async () => {
-    try {
-      const statusText = await ApiService.getStatus(unitId);
-      setDeviceStatus(statusText);
-    } catch (error) {
-      console.error("Ошибка загрузки статуса:", error);
-      setDeviceStatus("Ошибка загрузки статуса");
+const fetchStatus = async () => {
+  try {
+    const statusText = await ApiService.getStatus(unitId);
+    setDeviceStatus(statusText);
+  } catch (error) {
+    console.error("Ошибка загрузки статуса:", error);
+    if (error instanceof Error && error.message.includes('404')) {
+      setDeviceStatus("Устройство не найдено");
+    } else {
+      setDeviceStatus("Ошибка связи с устройством");
     }
-  };
-
+  }
+};
   // Загрузка текущей программы устройства (мемоизированная версия)
-  const fetchCurrentProgram = useCallback(async () => {
-    if (isFetchingProgramRef.current) return;
-    
-    isFetchingProgramRef.current = true;
-    setLoadingProgram(true);
-    
-    try {
-      const program = await ApiService.getCurrentProgram();
-      setCurrentProgramId(program);
-    } catch (error) {
-      console.error('Ошибка получения текущей программы:', error);
-      toast.error('Не удалось получить текущую программу устройства');
-    } finally {
-      setLoadingProgram(false);
-      isFetchingProgramRef.current = false;
-    }
-  }, []);
+const fetchCurrentProgram = useCallback(async () => {
+  if (isFetchingProgramRef.current) return;
+
+  isFetchingProgramRef.current = true;
+  setLoadingProgram(true);
+
+  try {
+    const program = await ApiService.getCurrentProgram();
+    setCurrentProgramId(program);
+  } catch (error) {
+    console.error('Ошибка получения текущей программы:', error);
+    // Если программа не найдена — можно установить null
+    setCurrentProgramId(null);
+    toast.error('Не удалось получить программу');
+  } finally {
+    setLoadingProgram(false);
+    isFetchingProgramRef.current = false;
+  }
+}, []);
 
   // Загрузка последних обжигов
   const fetchRecentFirings = async () => {
@@ -108,11 +113,16 @@ export const useDashboard = (unitId: number = 16) => {
   };
 
   // Эффект: загружать статус каждые 5 сек
-  useEffect(() => {
-    fetchStatus();
-    const statusIntervalId = setInterval(fetchStatus, 5000);
-    return () => clearInterval(statusIntervalId);
-  }, [unitId]);
+useEffect(() => {
+  if (!unitId || unitId <= 0) {
+    setDeviceStatus("Неверный ID устройства");
+    return;
+  }
+
+  fetchStatus();
+  const interval = setInterval(fetchStatus, 5000);
+  return () => clearInterval(interval);
+}, [unitId]);
 
   // Эффект: загружать текущую программу при монтировании
   useEffect(() => {
@@ -161,7 +171,7 @@ export const useDashboard = (unitId: number = 16) => {
       const sessionData = await ApiService.createSession(currentProgramId);
       setSessionId(sessionData.id);
       toast.success(`Сессия создана: ID ${sessionData.id}`);
-
+      console.log("Current sessionId:", sessionData.id);
       // 2. Запустить печь
       await ApiService.startStop(unitId, true);
       toast.success("Печь запущена.");

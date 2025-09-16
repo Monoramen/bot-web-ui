@@ -22,10 +22,13 @@ const handleResponse = async (response: Response) => {
 
 export const ApiService = {
   // Получить статус устройства
+
   async getStatus(unitId: number): Promise<string> {
-    const response = await fetch(`${API_BASE_URL}/firing-management/status?unitId=${unitId}`);
-    const text = await response.text();
-    return text;
+    const res = await fetch(`/api/status/${unitId}`);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+    }
+    return await res.text();
   },
 
   // Выбрать программу
@@ -48,10 +51,7 @@ export const ApiService = {
 
   // Создать сессию
   async createSession(programNumber: number): Promise<{ id: string }> {
-    const response = await fetch(
-      `${API_BASE_URL}/session?programNumber=${programNumber}`,
-      { method: 'POST' }
-    );
+    const response = await fetch(`${API_BASE_URL}/session?programNumber=${programNumber}`,{ method: 'POST' });
     await handleResponse(response);
     return response.json();
   },
@@ -122,14 +122,42 @@ async getProgramDataForSession(sessionId: string): Promise<FiringProgram> {
     }
     return response.json();
   },
-    async getCurrentProgram(unitId: number): Promise<number> {
+    async getCurrentProgram(): Promise<number> {
     const response = await fetch(`${API_BASE_URL}/firing-management/current-program`);
     if (!response.ok) {
       throw new Error('Failed to fetch current program');
     }
     return response.json();
   },
+// Получить все зафиксированные температурные показания сессии (для истории/графика)
+  async getSessionTemperatureReadings(sessionId: string): Promise<TemperatureReading[]> {
+    const numericId = parseInt(sessionId, 10);
+    if (isNaN(numericId)) {
+      throw new Error(`Invalid session ID: ${sessionId}`);
+    }
 
+    const url = `${API_BASE_URL}/runtime?sessionId=${numericId}`;
+    console.log("Fetching:", url);
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Response error:", errorText);
+        throw new Error(`Failed to fetch session temperature readings: ${response.status} ${errorText}`);
+      }
+
+      return response.json();
+    } catch (err) {
+      console.error("Fetch error:", err);
+      throw new Error('Failed to fetch session temperature readings');
+    }
+  },
 
 // Получение всех программ
 async getFiringPrograms(): Promise<FiringProgram[]> {
@@ -207,11 +235,27 @@ async getDeviceProgramById(programId: number): Promise<Program> {
 
 
 async getCurrentPower(): Promise<number> {
-  const response = await fetch(`${API_BASE_URL}/firing-management/current-power`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch current power');
+  try {
+    const response = await fetch(`${API_BASE_URL}/firing-management/current-power`);
+
+    // Если статус не OK — возвращаем 0, не ломаемся
+    if (!response.ok) {
+      console.warn(`[getCurrentPower] API returned ${response.status}. Returning 0.`);
+      return 0;
+    }
+
+    const data = await response.json();
+
+    // Проверяем, что data — число. Если нет — возвращаем 0.
+    if (typeof data !== 'number') {
+      console.warn(`[getCurrentPower] Expected number, got:`, data);
+      return 0;
+    }
+
+    return data;
+  } catch (err) {
+    console.error('[getCurrentPower] Network or parsing error:', err);
+    return 0; // безопасное значение по умолчанию
   }
-  const data = await response.json();
-  return data; // или просто `return data;`, если API возвращает число
 }
 };

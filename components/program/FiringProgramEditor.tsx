@@ -50,6 +50,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
     onDeploySuccess,
     onCancel,
     onDelete,
+    
   });
 
   return (
@@ -162,7 +163,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
   {/* Группа: Выгрузка из ПУ */}
   <div className="flex items-center gap-1">
     <Download className="h-3.5 w-3.5 text-muted-foreground" />
-    <span className="text-xs text-muted-foreground">Из ПУ:</span>
+    <span className="text-xs text-muted-foreground">ВЫГРУЗИТЬ:</span>
   </div>
   {[1, 2, 3].map((slot) => (
     <TooltipProvider key={`fetch-${slot}`}>
@@ -181,7 +182,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
             ) : (
               <Download className="h-3 w-3" />
             )}
-            <span>P{slot}</span>
+            <span>П{slot}</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top" className="bg-secondary text-secondary-foreground border-none text-xs">
@@ -197,7 +198,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
   {/* Группа: Загрузка в ПУ */}
   <div className="flex items-center gap-1">
     <Upload className="h-3.5 w-3.5 text-muted-foreground" />
-    <span className="text-xs text-muted-foreground">В ПУ:</span>
+    <span className="text-xs text-muted-foreground">ЗАГРУЗИТЬ:</span>
   </div>
   {[1, 2, 3].map((slot) => (
     <TooltipProvider key={`deploy-${slot}`}>
@@ -219,7 +220,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top" className="bg-primary text-primary-foreground border-none text-xs">
-          <p>Загрузить в слот P{slot}</p>
+          <p>Загрузить в слот П{slot}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

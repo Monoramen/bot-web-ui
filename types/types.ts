@@ -15,7 +15,7 @@ export interface Program {
 
 // types/session.ts
 export interface ChartDataPoint {
-  time: string;
+  time: number;
   temperature: number | null;   // ← explicitly allow null
-  targetTemp: number | null;    // ← explicitly allow null
+  targetTemp?: number | null;    // ← explicitly allow null
 }

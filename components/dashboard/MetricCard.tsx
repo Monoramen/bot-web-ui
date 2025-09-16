@@ -2,28 +2,28 @@
 
 'use client';
 
+import { Card, CardContent } from "@/components/ui/card";
+
 interface MetricCardProps {
   label: string;
-  value: React.ReactNode;
-  icon: string;
+  value: React.ReactNode; // ✅ Разрешаем JSX, строки, числа и т.д.
+  icon: React.ReactNode;  // ✅ Вот здесь — ключевое изменение!
 }
 
 export default function MetricCard({ label, value, icon }: MetricCardProps) {
   return (
-    <div 
-      className="bg-gradient-to-br from-muted/80 to-muted/40 p-4 rounded-xl border border-muted/50 
-                 text-center flex flex-col items-center justify-center gap-2 
-                 hover:scale-105 transition-transform duration-300 group"
-    >
-      <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-        <span className="text-xl group-hover:scale-110 transition-transform duration-300">
-          {icon}
-        </span>
-        {label}
-      </div>
-      <div className="text-xl md:text-2xl font-extrabold text-foreground leading-tight">
-        {value}
-      </div>
-    </div>
+    <Card className="bg-card border border-border/50 hover:border-primary/30 transition-colors">
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="text-muted-foreground">
+            {icon}
+          </div>
+          <div className="text-xs font-medium text-muted-foreground">{label}</div>
+        </div>
+        <div className="text-lg sm:text-xl font-bold text-foreground">
+          {value}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

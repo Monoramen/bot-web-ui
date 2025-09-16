@@ -9,7 +9,7 @@ import QuickActionsCard from '@/components/dashboard/QuickActionsCard';
 import RecentFiringsCard from '@/components/dashboard/RecentFiringsCard';
 import EventLogCard from '@/components/dashboard/EventLogCard';
 import { useDashboard } from '@/hooks/useDashboard';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FiringSession } from '@/types/session';
 
 export default function DashboardPage() {
@@ -22,7 +22,7 @@ export default function DashboardPage() {
     isCritical,
     statusMap,
     currentStage,
-    recentFirings, // 👈 ЭТО ВАЖНО!
+    recentFirings, 
     isLoadingRecent,
     eventLog,
     handleStartStop,
@@ -33,24 +33,24 @@ export default function DashboardPage() {
   const [selectedFiring, setSelectedFiring] = useState<FiringSession | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Получаем последнюю сессию
+  // В DashboardPage.tsx
   const latestFiring = recentFirings.length > 0 ? recentFirings[0] : null;
-
-  // ✅ Функция для валидации ID сессии
-  const getValidSessionId = (id: number): string | null => {
-    if (id === null || id === undefined) return null;
-    const numericId = Number(id);
-    return isNaN(numericId) ? null : numericId.toString();
-  };
+  const startTime = latestFiring?.start_time ?? null; // ← добавляем
 
   // Обновляем displaySessionId при изменении sessionId или recentFirings
-  const displaySessionId = sessionId ?? (latestFiring ? getValidSessionId(latestFiring.id) : null);
+  const displaySessionId = sessionId || (latestFiring?.id ? latestFiring.id.toString() : null);
 
   const openFiringDetails = (firing: FiringSession) => {
     setSelectedFiring(firing);
     setIsModalOpen(true);
   };
-
+  if (deviceStatus === "Устройство не найдено") {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
+        <div className="text-lg text-red-500">Устройство с ID не найдено.</div>
+      </div>
+    );
+  }
   // Показываем лоадер пока загружаются данные
   if (isLoadingRecent) {
     return (
@@ -76,10 +76,11 @@ export default function DashboardPage() {
           startTime={latestFiring?.start_time} // 👈 КЛЮЧЕВОЙ
         />
 
-        <TemperatureChartCard 
-          sessionId={displaySessionId}
-          isRunning={isRunning}
-        />
+      <TemperatureChartCard 
+        sessionId={displaySessionId}
+        isRunning={isRunning}
+        startTime={startTime} // 👈 новое свойство
+      />
 
         <QuickActionsCard 
           loading={loading}
@@ -93,7 +94,7 @@ export default function DashboardPage() {
         />
 
         <RecentFiringsCard 
-          recentFirings={recentFirings}
+          
           openFiringDetails={openFiringDetails}
         />
 

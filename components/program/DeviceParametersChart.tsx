@@ -42,7 +42,7 @@ const DeviceParameterChart: React.FC<DeviceParametersChartProps> = ({ program })
     let currentTime = 0;
 
     // Start from time 0, temperature 0.
-    chartPoints.push({ time: 0, temperature: 0 });
+    chartPoints.push({ time: 0, temperature: 0, targetTemp: 0 });
 
     prog.steps.forEach((step) => {
       // Skip steps with no ramp or target temp to avoid plotting invalid points.
@@ -51,15 +51,15 @@ const DeviceParameterChart: React.FC<DeviceParametersChartProps> = ({ program })
       const lastTemp = chartPoints[chartPoints.length - 1]?.temperature ?? 0;
       
       // Add point for the start of the ramp.
-      chartPoints.push({ time: currentTime, temperature: lastTemp });
+      chartPoints.push({ time: currentTime, temperature: lastTemp, targetTemp: null });
 
       // Add point for the end of the ramp (reaching target temperature).
       currentTime += step.ramp_time_minutes;
-      chartPoints.push({ time: currentTime, temperature: step.target_temperature_c });
+      chartPoints.push({ time: currentTime, temperature: step.target_temperature_c, targetTemp: null });
 
       // Add point for the end of the hold time.
       currentTime += step.hold_time_minutes;
-      chartPoints.push({ time: currentTime, temperature: step.target_temperature_c });
+      chartPoints.push({ time: currentTime, temperature: step.target_temperature_c, targetTemp: null });
     });
 
     setChartData(chartPoints);

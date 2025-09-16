@@ -25,7 +25,7 @@ const minutesToTimeString = (totalMinutes: number): string => {
     .padStart(2, '0')}`;
 };
 
-export const useSessionChartData = (sessionId: string | null, isRunning: boolean) => {
+export const useSessionChartData = (sessionId: string | null, isRunning: boolean, startTime: string | null ) => {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [profileData, setProfileData] = useState<ChartDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +43,22 @@ export const useSessionChartData = (sessionId: string | null, isRunning: boolean
         let profile: ChartDataPoint[] = [];
         let currentTimeMinutes = 0;
 
+        // Если startTime не задан — не можем синхронизировать время
+        if (!startTime) {
+          console.warn("startTime не передан, целевая температура не будет отображаться корректно");
+          return;
+        }
+
         programData.steps.forEach((step: any) => {
           const targetTemp = step.target_temperature_c ?? undefined;
 
+          // Точка начала этапа
           profile.push({
             time: minutesToTimeString(currentTimeMinutes),
             targetTemp,
           });
+
+          // Переходим к концу этапа
           currentTimeMinutes += step.ramp_time_minutes + step.hold_time_minutes;
           profile.push({
             time: minutesToTimeString(currentTimeMinutes),
@@ -64,20 +73,44 @@ export const useSessionChartData = (sessionId: string | null, isRunning: boolean
       setError(e instanceof Error ? e.message : 'Ошибка загрузки профиля');
     }
   };
-
-  // ✅ Подгружаем runtime-данные (новые точки)
+// ✅ Подгружаем runtime-данные (новые точки)
   const loadRuntimeData = async (id: number) => {
     try {
-      const runtimeData = await ApiService.getRuntimeTemperature(id.toString());
+      // ВСЕГДА используем getSessionTemperatureReadings — для любых сессий
+      const runtimeData = await ApiService.getSessionTemperatureReadings(id.toString());
 
+      // Если нет startTime — не можем вычислить время с начала
+      if (!startTime) {
+        console.warn("startTime не передан, реальные данные не будут синхронизированы");
+        return;
+      }
+
+      const sessionStart = new Date(startTime).getTime();
+
+      // Фильтруем и преобразуем данные
       const newData: ChartDataPoint[] = runtimeData
-        .map((reading: any) => ({
-          time: formatTime(reading.timestamp),
-          temperature: isValidTemperature(reading.temperature)
-            ? reading.temperature
-            : undefined,
-        }))
-        .filter((p: ChartDataPoint) => p.temperature !== undefined);
+        .map((reading: any) => {
+          const readingTime = new Date(reading.timestamp).getTime();
+          const elapsedMinutes = Math.floor((readingTime - sessionStart) / 60000); // в минутах
+
+          // Фильтруем бессмысленные значения (ошибки сенсора)
+          let temp = reading.temperature;
+          if (
+            typeof temp !== 'number' ||
+            isNaN(temp) ||
+            temp < -50 || // ниже -50°C — нереально
+            temp > 1500 || // выше 1500°C — нереально для печи
+            !isFinite(temp) // Infinity, -Infinity
+          ) {
+            temp = undefined;
+          }
+
+          return {
+            time: minutesToTimeString(elapsedMinutes),
+            temperature: temp,
+          };
+        })
+        .filter((p: ChartDataPoint) => p.temperature !== undefined); // оставляем только валидные
 
       // только новые точки (после последней сохранённой)
       const lastTime = prevDataRef.current.length
@@ -104,7 +137,7 @@ export const useSessionChartData = (sessionId: string | null, isRunning: boolean
       prevDataRef.current = limited;
       setChartData(limited);
     } catch (e) {
-      console.error("Ошибка загрузки runtime:", e);
+      console.error("Ошибка загрузки данных температуры:", e);
       setError(e instanceof Error ? e.message : 'Ошибка загрузки температуры');
     }
   };

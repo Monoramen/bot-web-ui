@@ -25,29 +25,32 @@ const handleSaveProgram = async (
   
 
     try {
-      let updatedProgram: FiringProgram;
-        if (programData.id === undefined || programData.id === null) {
-          // Создание новой программы
-          updatedProgram = await ApiService.createFiringProgram(programData);
-        } else {
-          // Обновление существующей
-          updatedProgram = await ApiService.updateFiringProgram(programData.id, programData);
-        }
-      if (selectedProgramId === null || selectedProgramId === undefined) {
-        updatedProgram = await ApiService.createFiringProgram(programData);
-        setPrograms((prev) => [...prev, updatedProgram]);
-        setSelectedProgramId(updatedProgram.id);
-        toast.success('Программа успешно создана!');
-      } else {
-        updatedProgram = await ApiService.updateFiringProgram(selectedProgramId, programData);
-        setPrograms((prev) =>
-          prev.map((p) => (p.id === updatedProgram.id ? updatedProgram : p))
-        );
-        toast.success('Программа успешно обновлена!');
-      }
+          let updatedProgram: FiringProgram;
 
-      setSelectedProgramVersion((prev) => prev + 1);
-      await reload();
+          if (programData.id === undefined || programData.id === null) {
+            // Создание новой программы
+            updatedProgram = await ApiService.createFiringProgram(programData);
+          } else {
+            // Обновление существующей
+            updatedProgram = await ApiService.updateFiringProgram(programData.id, programData);
+          }
+
+          // Теперь обновляем состояние
+          if (selectedProgramId === null || selectedProgramId === undefined) {
+            // Новая программа
+            setPrograms((prev) => [...prev, updatedProgram]);
+            setSelectedProgramId(updatedProgram.id);
+            toast.success('Программа успешно создана!');
+          } else {
+            // Существующая программа
+            setPrograms((prev) =>
+              prev.map((p) => (p.id === updatedProgram.id ? updatedProgram : p))
+            );
+            toast.success('Программа успешно обновлена!');
+          }
+
+          setSelectedProgramVersion((prev) => prev + 1);
+          await reload();
     } catch (err) {
         let errorMessage = 'Неизвестная ошибка';
         if (err instanceof Error) {
@@ -109,24 +112,24 @@ const handleSaveProgram = async (
 
         {/* Средняя колонка: редактор */}
         <div className="flex-1 lg:w-1/3 flex flex-col gap-6">
-      <FiringProgramTable
-        programId={selectedProgramId}
-        onSave={(data) => {
-          if (data) {
-            handleSaveProgram(data);
-          }
-        }}
-        onDelete={
-          selectedProgramId !== null
-            ? () => handleDeleteProgram(selectedProgramId)
-            : undefined
-        }
-        onCancel={() => setSelectedProgramId(null)}
-        onDeploySuccess={() => {
-          console.log('✅ onDeploySuccess вызван — ProgramLoader обновит данные');
-        }}
-        onFetchFromDevice={() => setSelectedProgramId(null)} // ✅ Новый проп
-      />
+<FiringProgramTable
+  programId={selectedProgramId}
+  onSave={(data) => {
+    if (data) {
+      handleSaveProgram(data);
+    }
+  }}
+  onDelete={
+    selectedProgramId !== null
+      ? () => handleDeleteProgram(selectedProgramId)
+      : undefined
+  }
+  onCancel={() => setSelectedProgramId(null)}
+  onDeploySuccess={() => {
+    console.log('✅ onDeploySuccess вызван — ProgramLoader обновит данные');
+  }}
+  onFetchFromDevice={() => setSelectedProgramId(null)} // ✅ Это сбросит программу → "режим создания"
+/>
         </div>
 
         {/* Правая колонка: график */}

@@ -32,6 +32,7 @@ export const useFiringProgramEditor = ({
   programId,
   onSave,
   onDeploySuccess,
+  onFetchFromDevice, 
 }: UseFiringProgramEditorProps) => {
   const [steps, setSteps] = useState<ProgramStep[]>(createDefaultSteps());
   const [programName, setProgramName] = useState<string>('');

@@ -11,10 +11,11 @@ import { useSessionChartData } from '@/hooks/useSessionChartData';
 interface TemperatureChartCardProps {
   sessionId: string | null;
   isRunning: boolean;
+  startTime: string | null;
 }
 
-function TemperatureChartCard({ sessionId, isRunning }: TemperatureChartCardProps) {
-  const { chartData, isLoading, error } = useSessionChartData(sessionId, isRunning);
+function TemperatureChartCard({ sessionId, isRunning, startTime }: TemperatureChartCardProps) {
+  const { chartData, isLoading, error } = useSessionChartData(sessionId, isRunning, startTime);
   const [isDark, setIsDark] = useState(false);
 
   // Отслеживаем тему (только один раз при монтировании)

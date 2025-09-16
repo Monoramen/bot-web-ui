@@ -35,7 +35,6 @@ export default function HeaderStatusCard({
   isRunning,
   isCritical,
   statusMap,
-  currentStage,
   program,
   startTime,
 }: HeaderStatusCardProps) {

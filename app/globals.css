@@ -58,11 +58,11 @@
   --destructive: #E03131;       /* опасное действие */
 
   /* Графики */
-  --chart-1: #6C757D;
-  --chart-2: #495057;
-  --chart-3: #ADB5BD;
-  --chart-4: #CED4DA;
-  --chart-5: #939CA3;
+  --chart-1: #4b95d6;
+  --chart-2: #88b3dd;
+  --chart-3: #3d93e9;
+  --chart-4: #0da8a8;
+  --chart-5: #337ad8;
 
   /* Сайдбар */
   --sidebar: #DCE0E3;
@@ -116,11 +116,11 @@
   --accent-foreground: #E8F2F7;
   --destructive: #FF3D00;
 
-  --chart-1: #5C94B9;
-  --chart-2: #50766B;
-  --chart-3: #8D76A5;
-  --chart-4: #4B6B82;
-  --chart-5: #3F596B;
+  --chart-1: #1492e6;
+  --chart-2: #14d69f;
+  --chart-3: #c095ee;
+  --chart-4: #167cc5;
+  --chart-5: #0a80d4;
 
   --sidebar: #495057;
   --sidebar-foreground: #F8F9FA;

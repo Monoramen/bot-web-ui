@@ -11,7 +11,7 @@ import EventLogCard from '@/components/dashboard/EventLogCard';
 import { useDashboard } from '@/hooks/useDashboard';
 import { useState } from 'react';
 import { FiringSession } from '@/types/session';
-
+import { ClipboardList,ScrollTextIcon } from "lucide-react";
 export default function DashboardPage() {
   const {
     deviceStatus,
@@ -33,11 +33,8 @@ export default function DashboardPage() {
   const [selectedFiring, setSelectedFiring] = useState<FiringSession | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // В DashboardPage.tsx
   const latestFiring = recentFirings.length > 0 ? recentFirings[0] : null;
-  const startTime = latestFiring?.start_time ?? null; // ← добавляем
-
-  // Обновляем displaySessionId при изменении sessionId или recentFirings
+  const startTime = latestFiring?.start_time ?? null;
   const displaySessionId = sessionId || (latestFiring?.id ? latestFiring.id.toString() : null);
 
   const openFiringDetails = (firing: FiringSession) => {
@@ -45,8 +42,6 @@ export default function DashboardPage() {
     setIsModalOpen(true);
   };
 
-
-  // Показываем лоадер пока загружаются данные
   if (isLoadingRecent) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
@@ -59,23 +54,22 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <StatusBanner isCritical={isCritical} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* ✅ ВСЁ ПРАВИЛЬНО — теперь с программой и временем */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <HeaderStatusCard 
           deviceStatus={deviceStatus}
           isRunning={isRunning}
           isCritical={isCritical}
           statusMap={statusMap}
           currentStage={currentStage}
-          program={latestFiring?.program}     // 👈 КЛЮЧЕВОЙ
-          startTime={latestFiring?.start_time} // 👈 КЛЮЧЕВОЙ
+          program={latestFiring?.program}
+          startTime={latestFiring?.start_time}
         />
 
-      <TemperatureChartCard 
-        sessionId={displaySessionId}
-        isRunning={isRunning}
-        startTime={startTime} // 👈 новое свойство
-      />
+        <TemperatureChartCard 
+          sessionId={displaySessionId}
+          isRunning={isRunning}
+          startTime={startTime}
+        />
 
         <QuickActionsCard 
           loading={loading}
@@ -87,13 +81,37 @@ export default function DashboardPage() {
           onRefreshProgram={fetchCurrentProgram}
           refreshing={loading}
         />
+      </div>
 
-        <RecentFiringsCard 
-          
-          openFiringDetails={openFiringDetails}
-        />
+      {/* ✅ НОВАЯ СТРОКА: Последние обжиги + Логи — в одну строку, с прокруткой */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Обжиги */}
+        <div className="h-96 bg-card rounded-lg border-2 border-border/50 overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-border/50 bg-card/80">
+            <div className="flex items-center gap-3 text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+  <ClipboardList className="h-6 w-6 text-primary" />
+  Последние обжиги
+</div>
+           </div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <RecentFiringsCard 
+              openFiringDetails={openFiringDetails}
+            />
+          </div>
+        </div>
 
-        <EventLogCard eventLog={eventLog} />
+        {/* Логи */}
+        <div className="h-96 bg-card rounded-lg border border-border/50 overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-border/50 bg-card/80">
+<div className="flex items-center gap-3 text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+  <ScrollTextIcon className="h-6 w-6 text-primary" />
+  Журнал событий
+</div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <EventLogCard eventLog={eventLog} />
+          </div>
+        </div>
       </div>
 
       <RecentFiringModal 

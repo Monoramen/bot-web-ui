@@ -18,10 +18,7 @@ export default function RecentFiringsCard({ openFiringDetails }: RecentFiringsCa
   const { recentFirings, loading, error } = useRecentFirings();
 
   return (
-    <Card className="md:col-span-2 lg:col-span-3">
-      <CardContent className="pt-6">
-        <h2 className="text-xl font-semibold mb-4">Последние обжиги</h2>
-        
+    <div>
         {loading && <RecentFiringsLoader />}
         {error && <RecentFiringsError message={error} />}
         {!loading && !error && recentFirings.length === 0 && <RecentFiringsEmpty />}
@@ -36,7 +33,6 @@ export default function RecentFiringsCard({ openFiringDetails }: RecentFiringsCa
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+</div>
   );
 }

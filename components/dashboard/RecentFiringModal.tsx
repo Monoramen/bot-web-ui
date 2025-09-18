@@ -3,22 +3,26 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ChartRenderer from "@/components/dashboard/ChartRenderer";
-import { useState, useEffect } from "react";    
-import { FiringSession } from "@/types/session";
-
+import { useState, useEffect } from "react";
+import { FiringSession, ChartDataPoint } from "@/types/session"; // Добавлен ChartDataPoint
+import { generateProgramProfile } from '@/utils/programProfileGenerator'; // Импортируем вашу функцию
+import { generateChartData } from '@/utils/chartDataGenerator'; // ✅ Добавьте этот импорт
 interface RecentFiringModalProps {
-  firing: FiringSession | null; // может быть null, судя по логике `if (!firing) return null`
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+    firing: FiringSession | null;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 }
-interface ChartPoint {
-  time: string;
-  temperature?: number;
-  targetTemp?: number;
-}
+
+// ChartPoint теперь не нужен, так как ChartDataPoint уже определен
+// interface ChartPoint {
+//     time: string;
+//     temperature?: number;
+//     targetTemp?: number;
+// }
 
 const RecentFiringModal = ({ firing, open, onOpenChange }: RecentFiringModalProps) => {
-    const [chartData, setChartData] = useState<{ time: string; temperature?: number; targetTemp?: number }[]>([]);
+    // Используем ChartDataPoint[] для состояния chartData
+    const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
     const [isDark, setIsDark] = useState(false);
 
     useEffect(() => {
@@ -32,81 +36,84 @@ const RecentFiringModal = ({ firing, open, onOpenChange }: RecentFiringModalProp
         return () => observer.disconnect();
     }, []);
 
-    // Форматирование времени
-    const formatTime = (timestamp: string | number | Date | null | undefined) => {
-        if (!timestamp) return "—";
-        const date = new Date(timestamp);
-        return date.toTimeString().slice(0, 5);
-    };
+    // Форматирование времени - теперь только для реальных показаний
+const formatTimeFromStart = (timestamp: string | number | Date | null | undefined, startTime: string | null) => {
+    if (!timestamp || !startTime) return "—";
 
-    // Объединение данных
-// Объединение данных
-const mergeChartData = (realData: ChartPoint[], profileData: ChartPoint[]) => {
-    const timeMap = new Map<string, ChartPoint>();
+    const start = new Date(startTime);
+    const current = new Date(timestamp);
+    const elapsedMinutes = Math.floor((current.getTime() - start.getTime()) / 60000);
 
-    realData.forEach(point => {
+    return minutesToTimeString(elapsedMinutes);
+};
+const minutesToTimeString = (totalMinutes: number): string => {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.floor(totalMinutes % 60);
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+};
+    // Объединение данных - теперь принимает ChartDataPoint[]
+// Replace the mergeChartData function in RecentFiringModal.tsx with this version
+const mergeChartData = (realData: ChartDataPoint[], profileData: ChartDataPoint[]) => {
+    // 1. Create a map with all profile data points
+    const timeMap = new Map<string, ChartDataPoint>();
+    profileData.forEach(point => {
         timeMap.set(point.time, { ...point });
     });
 
-    profileData.forEach(point => {
-        if (timeMap.has(point.time)) {
-            timeMap.set(point.time, { ...timeMap.get(point.time), ...point });
+    // 2. Iterate through real data and merge with profile data
+    realData.forEach(point => {
+        const existing = timeMap.get(point.time);
+        if (existing) {
+            // If the time already exists in the profile, merge the real temperature
+            timeMap.set(point.time, { ...existing, temperature: point.temperature });
         } else {
-            timeMap.set(point.time, { ...point });
+            // If the time is only in the real data, add a new point
+            timeMap.set(point.time, {
+                time: point.time,
+                temperature: point.temperature,
+                targetTemp: undefined // No target for this point
+            });
         }
     });
 
-    return Array.from(timeMap.values()).sort((a, b) => {
+    // 3. Convert the map back to a sorted array
+    const mergedAndSorted = Array.from(timeMap.values()).sort((a, b) => {
         const [aH, aM] = a.time.split(':').map(Number);
         const [bH, bM] = b.time.split(':').map(Number);
         return aH * 60 + aM - (bH * 60 + bM);
     });
+
+    return mergedAndSorted;
 };
 
-    // Построение данных при изменении firing
-    useEffect(() => {
-        if (!firing) {
-            setChartData([]);
-            return;
-        }
+// RecentFiringModal.tsx
+useEffect(() => {
+    if (!firing) {
+        setChartData([]);
+        return;
+    }
 
-        // Реальные данные
-        const realData: ChartPoint[] = firing.temperature_readings?.map(r => ({
-            time: formatTime(r.timestamp),
-            temperature: typeof r.temperature === 'number' && !isNaN(r.temperature)
-                ? r.temperature
-                : 0
-        })) || [];
+    const startTime = firing.start_time;
 
-        // Целевой профиль
-// Целевой профиль
-            const profileData: ChartPoint[] = []; // ✅ Явно указываем тип
-            if (firing.program?.steps && firing.start_time) {
-                const startTime = new Date(firing.start_time);
-                let currentTime = 0;
+    // 1. Реальные данные — теперь с правильным форматом времени
+    const realData: ChartDataPoint[] = firing.temperature_readings?.map(r => ({
+        time: formatTimeFromStart(r.timestamp, startTime),
+        temperature: typeof r.temperature === 'number' && !isNaN(r.temperature)
+            ? r.temperature
+            : undefined,
+        targetTemp: undefined,
+    })) || [];
 
-                firing.program.steps.forEach(step => {
-                    if (step.step_number === 5) return; // игнорируем охлаждение
+    // 2. Профиль — генерируется по минутам, поэтому совпадает с форматом
+    let profileData: ChartDataPoint[] = [];
+    if (firing.program) {
+        profileData = generateProgramProfile(firing.program);
+    }
 
-                    const timeAtStart = new Date(startTime.getTime() + currentTime * 60000);
-                    profileData.push({
-                        time: formatTime(timeAtStart.toISOString()),
-                        targetTemp: step.target_temperature_c
-                    });
-
-                    currentTime += step.ramp_time_minutes + step.hold_time_minutes;
-                    const timeAtEnd = new Date(startTime.getTime() + currentTime * 60000);
-                    profileData.push({
-                        time: formatTime(timeAtEnd.toISOString()),
-                        targetTemp: step.target_temperature_c
-                    });
-                });
-            }   
-
-        // Объединяем
-        const merged = mergeChartData(realData, profileData);
-        setChartData(merged);
-    }, [firing]);
+    // 3. Объединяем данные
+    const merged = mergeChartData(realData, profileData);
+    setChartData(merged);
+}, [firing]);
 
     if (!firing) return null;
 
@@ -127,7 +134,7 @@ const mergeChartData = (realData: ChartPoint[], profileData: ChartPoint[]) => {
                     <div className="mt-6">
                         <h4 className="font-semibold text-lg mb-4">График обжига</h4>
                         {chartData.length > 0 ? (
-                            <ChartRenderer data={chartData} isDark={isDark} />  
+                            <ChartRenderer data={chartData} isDark={isDark} />
                         ) : (
                             <div className="h-64 bg-muted rounded flex items-center justify-center text-sm text-muted-foreground">
                                 Нет данных для графика

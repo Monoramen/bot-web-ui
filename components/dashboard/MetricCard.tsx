@@ -12,15 +12,22 @@ interface MetricCardProps {
 
 export default function MetricCard({ label, value, icon }: MetricCardProps) {
   return (
-    <Card className="bg-card border border-border/50 hover:border-primary/30 transition-colors">
-      <CardContent className="p-3 sm:p-4">
-        <div className="flex items-center gap-2 mb-1">
+    <Card className="        bg-card-light 
+        border border-border/50 
+        hover:border-primary/30 
+        transition-all 
+        duration-300 
+        hover:scale-105 
+        cursor-pointer
+        will-change-transform">
+      <CardContent className="p-3 sm:p-4 text-center"> {/* ✅ Центрируем ВСЁ содержимое карточки */}
+        <div className="flex items-center justify-center gap-2 mb-2"> {/* ✅ Центрируем иконку + заголовок */}
           <div className="text-muted-foreground">
             {icon}
           </div>
-          <div className="text-xs font-medium text-muted-foreground">{label}</div>
+          <div className="text-2xl font-medium text-muted-foreground">{label}</div>
         </div>
-        <div className="text-lg sm:text-xl font-bold text-foreground">
+        <div className="text-xl sm:text-xl md:text-2xl font-extrabold text-foreground leading-none">
           {value}
         </div>
       </CardContent>

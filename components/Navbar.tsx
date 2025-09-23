@@ -8,8 +8,7 @@ import Image from 'next/image'
 const navItems = [
   { href: '/', label: 'Главная' },
   { href: '/programs', label: 'Программы' },
-  { href: '/monitoring', label: 'Мониторинг' },
-  { href: '/settings', label: 'Настройки' },
+
 ];
 
 interface NavbarProps {

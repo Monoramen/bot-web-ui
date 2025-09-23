@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
   Label,
+  Brush,
 } from "recharts";
 import { ChartDataPoint } from '@/types/session';
 
@@ -59,7 +60,14 @@ export default function ChartRenderer({ data, isDark }: ChartRendererProps) {
             vertical={true}
             opacity={0.7}
           />
-
+  <Brush
+    dataKey="time"
+    height={30}
+    stroke={targetLineColor}
+    fillOpacity={0.1}
+    gap={5}
+    travellerWidth={8}
+  />
           <XAxis
             dataKey="time"
             tick={{ fill: textColor, fontSize: 12 }}

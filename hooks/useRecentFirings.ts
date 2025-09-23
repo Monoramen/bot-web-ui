@@ -39,9 +39,24 @@ const formatted = data.map(session => ({
     }
   };
 
+
+    const deleteFiring = async (sessionId: string) => {
+    setLoading(true);
+    try {
+      await ApiService.deleteSession(sessionId);
+      // После успешного удаления — обновляем список
+      await fetchRecentFirings();
+    } catch (err) {
+      console.error('Ошибка удаления сессии:', err);
+      setError('Не удалось удалить сессию');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchRecentFirings();
   }, []);
 
-  return { recentFirings, loading, error, refetch: fetchRecentFirings };
+  return { recentFirings, loading, error, refetch: fetchRecentFirings, deleteFiring  };
 };

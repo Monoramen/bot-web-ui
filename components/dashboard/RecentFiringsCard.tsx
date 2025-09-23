@@ -2,7 +2,6 @@
 
 'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
 import RecentFiringsLoader from '@/components/dashboard/RecentFiringLoader';
 import RecentFiringsEmpty from '@/components/dashboard/RecentFiringEmpty';
 import RecentFiringsError from '@/components/dashboard/RecentFiringError';
@@ -15,8 +14,13 @@ interface RecentFiringsCardProps {
 }
 
 export default function RecentFiringsCard({ openFiringDetails }: RecentFiringsCardProps) {
-  const { recentFirings, loading, error } = useRecentFirings();
-
+  const { recentFirings, loading, error, deleteFiring } = useRecentFirings();
+  const handleDelete = async (e: React.MouseEvent, sessionId: string) => {
+    e.stopPropagation(); // Останавливаем всплытие, чтобы не сработал onClick родителя
+    if (window.confirm("Вы уверены, что хотите удалить эту сессию?")) {
+      await deleteFiring(sessionId);
+    }
+  };
   return (
     <div>
         {loading && <RecentFiringsLoader />}
@@ -29,6 +33,7 @@ export default function RecentFiringsCard({ openFiringDetails }: RecentFiringsCa
         key={firing.id} 
         firing={firing} 
         onClick={() => openFiringDetails(firing)} 
+        onDeleteClick={(e) => handleDelete(e, firing.id)} 
       />
             ))}
           </div>

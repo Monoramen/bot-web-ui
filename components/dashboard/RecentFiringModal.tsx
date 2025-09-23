@@ -41,7 +41,7 @@ const RecentFiringModal = ({ firing, open, onOpenChange }: RecentFiringModalProp
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <p><strong>Дата:</strong> {new Date(firing.start_time).toLocaleString()}</p>
             <p><strong>Длительность:</strong> {firing.actual_duration_minutes} мин</p>
-            <p><strong>Макс. темп.:</strong> {firing.max_recorded_temperature}°C</p>
+            <p><strong>Макс. темп.:</strong> {Math.round(firing.max_recorded_temperature)}°C</p>
             <p><strong>Статус:</strong> {firing.status}</p>
           </div>
 

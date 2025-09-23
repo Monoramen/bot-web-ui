@@ -59,6 +59,13 @@ export const ApiService = {
     await handleResponse(response);
   },
 
+    async deleteSession(sessionId: string): Promise<void> {
+    const response = await fetch(
+      `${API_BASE_URL}/session/${sessionId}`,
+      { method: 'DELETE' }
+    );
+    await handleResponse(response);
+  },
   // Получить текущую температуру
 // В ApiService.getTemperature()
 async getTemperature(): Promise<number> {

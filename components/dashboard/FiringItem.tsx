@@ -1,12 +1,13 @@
 import { FiringSession } from '@/types/session';
 import { getStatusDisplay } from '@/constants/statusConfig';
-
+import { Trash2 } from 'lucide-react'; // Импортируем иконку
 interface FiringItemProps {
   firing: FiringSession;
   onClick: () => void;
+  onDeleteClick: (event: React.MouseEvent) => void; 
 }
 
-export default function FiringItem({ firing, onClick }: FiringItemProps) {
+export default function FiringItem({ firing, onClick, onDeleteClick }: FiringItemProps) {
   const statusDisplay = getStatusDisplay(firing.status);
 
   // Вычисляем programId из вложенного объекта
@@ -16,7 +17,7 @@ export default function FiringItem({ firing, onClick }: FiringItemProps) {
   // Используем actual_duration_minutes вместо duration
   const duration = firing.actual_duration_minutes || 0;
   // Используем max_recorded_temperature вместо maxTemp
-  const maxTemp = firing.max_recorded_temperature || 0;
+  const maxTemp = Math.round(firing.max_recorded_temperature) || 0;
 
   return (
     <div 
@@ -37,6 +38,14 @@ export default function FiringItem({ firing, onClick }: FiringItemProps) {
           <span className={`text-xs px-2.5 py-1 rounded-full font-medium border ${statusDisplay.color}`}>
             {statusDisplay.label}
           </span>
+
+                    <button
+            onClick={onDeleteClick}
+            className="p-1 rounded-full hover:bg-red-100 text-red-600 transition-colors"
+            aria-label="Удалить сессию"
+          >
+            <Trash2 size={16} />
+          </button>
         </div>
       </div>
     </div>

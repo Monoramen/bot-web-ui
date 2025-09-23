@@ -63,7 +63,6 @@ export default function ChartRenderer({ data, isDark }: ChartRendererProps) {
           <XAxis
             dataKey="time"
             tick={{ fill: textColor, fontSize: 12 }}
-            interval={Math.max(0, filteredData.length - 10)}
             axisLine={{ stroke: axisColor }}
             tickLine={{ stroke: axisColor }}
             minTickGap={20}

@@ -1,4 +1,3 @@
-// src/app/dashboard/page.tsx
 'use client';
 
 import RecentFiringModal from '@/components/dashboard/RecentFiringModal';
@@ -11,7 +10,8 @@ import EventLogCard from '@/components/dashboard/EventLogCard';
 import { useDashboard } from '@/hooks/useDashboard';
 import { useState } from 'react';
 import { FiringSession } from '@/types/session';
-import { ClipboardList,ScrollTextIcon } from "lucide-react";
+import { ClipboardList, ScrollTextIcon } from "lucide-react";
+
 export default function DashboardPage() {
   const {
     deviceStatus,
@@ -22,7 +22,7 @@ export default function DashboardPage() {
     isCritical,
     statusMap,
     currentStage,
-    recentFirings, 
+    recentFirings,
     isLoadingRecent,
     eventLog,
     handleStartStop,
@@ -55,7 +55,7 @@ export default function DashboardPage() {
       <StatusBanner isCritical={isCritical} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <HeaderStatusCard 
+        <HeaderStatusCard
           deviceStatus={deviceStatus}
           isRunning={isRunning}
           isCritical={isCritical}
@@ -65,13 +65,13 @@ export default function DashboardPage() {
           startTime={latestFiring?.start_time}
         />
 
-        <TemperatureChartCard 
+        <TemperatureChartCard
           sessionId={displaySessionId}
           isRunning={isRunning}
           startTime={startTime}
         />
 
-        <QuickActionsCard 
+        <QuickActionsCard
           loading={loading}
           currentProgramId={currentProgramId}
           handleSelectProgram={handleSelectProgram}
@@ -83,41 +83,34 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* ✅ НОВАЯ СТРОКА: Последние обжиги + Логи — в одну строку, с прокруткой */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* ✅ Обновленная строка: "Последние обжиги" теперь занимает всю ширину в отдельном блоке */}
+      <div className="mb-6">
         {/* Обжиги */}
         <div className="h-96 bg-card rounded-lg border-2 border-border/50 overflow-hidden flex flex-col">
           <div className="p-4 border-b border-border/50 bg-card/80">
             <div className="flex items-center gap-3 text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-  <ClipboardList className="h-6 w-6 text-primary" />
-  Последние обжиги
-</div>
-           </div>
+              <ClipboardList className="h-6 w-6 text-primary" />
+              Последние обжиги
+            </div>
+          </div>
           <div className="flex-1 overflow-y-auto p-4">
-            <RecentFiringsCard 
+            <RecentFiringsCard
               openFiringDetails={openFiringDetails}
             />
           </div>
         </div>
-
-        {/* Логи */}
-        <div className="h-96 bg-card rounded-lg border border-border/50 overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-border/50 bg-card/80">
-<div className="flex items-center gap-3 text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-  <ScrollTextIcon className="h-6 w-6 text-primary" />
-  Журнал событий
-</div>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <EventLogCard eventLog={eventLog} />
-          </div>
-        </div>
       </div>
 
-      <RecentFiringModal 
-        firing={selectedFiring} 
-        open={isModalOpen} 
-        onOpenChange={setIsModalOpen} 
+      {/* Логи (расположены в отдельном полноширинном блоке ниже) */}
+      {/* <div className="mb-6">
+        <EventLogCard eventLog={eventLog} />
+      </div>
+      */}
+
+      <RecentFiringModal
+        firing={selectedFiring}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
       />
     </div>
   );

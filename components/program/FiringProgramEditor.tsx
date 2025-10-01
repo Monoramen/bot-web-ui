@@ -186,7 +186,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top" className="bg-secondary text-secondary-foreground border-none text-xs">
-          <p>Выгрузить из слота P{slot}</p>
+          <p>Выгрузить из слота П{slot}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -216,7 +216,7 @@ const FiringProgramEditor: React.FC<FiringProgramEditorProps> = ({
             ) : (
               <Upload className="h-3 w-3" />
             )}
-            <span>P{slot}</span>
+            <span>П{slot}</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top" className="bg-primary text-primary-foreground border-none text-xs">

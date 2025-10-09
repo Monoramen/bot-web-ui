@@ -10,6 +10,7 @@ import { useRemainingTime } from '@/hooks/useRemainingTime';
 import { ListOrdered,Thermometer, TimerIcon } from "lucide-react";
 import { usePower } from '@/hooks/usePower';
 import { Zap } from "lucide-react"; // ⚡️ иконка мощности
+
 // ✅ Форматирование времени в MM:SS
 const formatTime = (minutes: number): string => {
   if (minutes < 0) minutes = 0;
@@ -75,6 +76,8 @@ export default function HeaderStatusCard({
             label="Температура"
             value={tempLoading ? <span className="inline-block animate-pulse">...</span> : `${currentTemp}°C`}
             icon= {<Thermometer/>}
+            showLabel={false} // Скрываем метку на всех размерах, где это нужно
+            className="sm:block hidden" // Пример: скрыть на small и показать на больших (это не применимо напрямую к label, но для общей логики)
           />
           <MetricCard
             label="Мощность"
@@ -88,8 +91,8 @@ export default function HeaderStatusCard({
               )
             }
             icon={<Zap className="text-yellow-500" />}
+            showLabel={false}
           />
-          {/* ✅ ЭТАП — теперь с иконкой и правильным текстом */}
           <MetricCard
             label="Этап"
             value={
@@ -102,9 +105,9 @@ export default function HeaderStatusCard({
                     : <span className="font-medium text-green-500">Готово</span>
             }
             icon={<ListOrdered />}
+            showLabel={false}
           />
 
-          {/* ✅ Осталось — только MM:SS, чисто и красиво */}
           <MetricCard
             label="Осталось"
             value={
@@ -113,12 +116,13 @@ export default function HeaderStatusCard({
                 : !program || !startTime
                   ? <span className="inline-block animate-pulse">Загрузка...</span>
                   : (
-                    <span className={`font-mono font-bold ${remainingMinutes < 1 ? 'text-red-500' : ''}`}>
-                      {formatTime(remainingMinutes)}
-                    </span>
-                  )
+                      <span className={`font-mono font-bold ${remainingMinutes < 1 ? 'text-red-500' : ''}`}>
+                        {formatTime(remainingMinutes)}
+                      </span>
+                    )
             }
             icon= {<TimerIcon/>}
+            showLabel={false}
           />
         </div>
       </CardContent>
